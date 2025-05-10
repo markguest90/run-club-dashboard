@@ -1,0 +1,8 @@
+streamlit
+pandas
+altair
+folium
+gspread
+oauth2client
+numpy
+geopy

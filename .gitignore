@@ -1,0 +1,13 @@
+
+# Ignore credentials and secrets
+runclubmapper-3e2cb58c2b12.json
+*.json
+.streamlit/secrets.toml
+
+# Ignore Excel/CSV caches
+*.xlsx
+*.xls
+*.csv
+
+# Ignore generated map files
+*.html
