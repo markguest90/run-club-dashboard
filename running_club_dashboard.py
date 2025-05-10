@@ -13,7 +13,7 @@ import os
 # ------------------------
 
 SHEET_NAME = "Arrowe Park ED Run Club"
-CREDENTIALS_FILE = "runclubmapper-3e2cb58c2b12.json"
+CREDENTIALS_FILE = "###################.json"
 
 # ------------------------
 # Mobile Mode Toggle
