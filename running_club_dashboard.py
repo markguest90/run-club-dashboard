@@ -25,8 +25,8 @@ SHEET_NAME = "Arrowe Park ED Run Club"
 # Mobile Mode Toggle
 # ------------------------
 
-st.sidebar.markdown("📱 **View Settings**")
-mobile_mode = st.sidebar.checkbox("Enable Mobile Mode", value=False)
+#st.sidebar.markdown("📱 **View Settings**")
+#mobile_mode = st.sidebar.checkbox("Enable Mobile Mode", value=False)
 
 # ------------------------
 # STREAK FUNCTIONS (moved up to support Wrapped)
