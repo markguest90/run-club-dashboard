@@ -5,6 +5,10 @@ import folium
 from folium.plugins import HeatMap
 from collections import defaultdict
 import streamlit.components.v1 as components
+components.html(
+    """<meta name="robots" contents="noindex">""",
+    height=0
+)
 import numpy as np
 import os
 import json
