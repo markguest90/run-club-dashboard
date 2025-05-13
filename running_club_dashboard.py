@@ -102,6 +102,48 @@ exploded = df.explode('RunnerList')
 exploded['Runner'] = exploded['RunnerList'].str.strip()
 
 # ------------------------
+# Dashboard Title
+# ------------------------
+st.markdown("""
+<div style='text-align: center;'>
+    <h1 style='font-size: 2.8em;'>🏃‍♀️ Arrowe Park ED Run Club Dashboard 🏃‍♂️</h1>
+    <p style='font-size: 1.2em; color: gray;'>Celebrate your achievements, track your streaks, and explore your run club stats!</p>
+</div>
+""", unsafe_allow_html=True)
+
+# ------------------------
+# Mobile Sidebar Tip for Runner Registry
+# ------------------------
+st.markdown("""
+<style>
+@media (min-width: 800px) {
+  .mobile-tip { display: none; }
+}
+
+@keyframes pulseFade {
+  0% { opacity: 0; transform: scale(0.95); }
+  10% { opacity: 1; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+  90% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.95); }
+}
+
+.mobile-tip {
+  animation: pulseFade 5s ease-in-out forwards;
+}
+</style>
+
+<div class="mobile-tip">
+  <div style="padding:10px; background:#e0f7fa; border-radius:5px; text-align:center; font-size: 1.05em;">
+    ❯ Tap the arrow in the top left to open the Runner Registry and find your capnumber!
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+
+
+
+# ------------------------
 # Runner Registry with Badges
 # ------------------------
 
@@ -182,7 +224,7 @@ if cap_input:
             last_run_fmt = last_run.strftime('%d/%m/%Y')
 
             st.markdown(f"## 👋 Well done, **{runner_name}**!")
-            col1, col2 = st.columns(2) if not mobile_mode else (st.container(), st.container())
+            col1, col2 = st.columns(2)
 
             with col1:
                 st.markdown(f"""
@@ -230,12 +272,12 @@ if cap_input:
 
 
             # Detected Run Dates
-            st.markdown("### 📅 Detected Run Dates")
-            formatted_dates = runner_df[['Date', 'Location']].copy()
-            formatted_dates = formatted_dates.sort_values('Date').reset_index(drop=True)
-            formatted_dates.index += 1
-            formatted_dates['Date'] = formatted_dates['Date'].dt.strftime('%d/%m/%Y')
-            st.write(formatted_dates)
+            #st.markdown("### 📅 Detected Run Dates")
+            #formatted_dates = runner_df[['Date', 'Location']].copy()
+            #formatted_dates = formatted_dates.sort_values('Date').reset_index(drop=True)
+            #formatted_dates.index += 1
+            #formatted_dates['Date'] = formatted_dates['Date'].dt.strftime('%d/%m/%Y')
+            #st.write(formatted_dates)
 
             # Downloadable Summary
             monthly_counts = runs_over_time.copy()
@@ -279,49 +321,51 @@ st.subheader("📊 Total Distance Run by the Club")
 st.metric(label="Total Distance", value=f"{round(total_club_km, 1)} km", label_visibility="collapsed")
 
 st.subheader("📍 Run Location Heatmap")
-location_counts = df.groupby('Location').size().reset_index(name='count')
-location_map = folium.Map(location=[53.38, -3.07], zoom_start=10)
+
+# ------------------------
+# Load or update locations cache via Google Sheet
+# ------------------------
 
 @st.cache_data(show_spinner=False)
-def load_or_update_postcode_cache(location_counts):
+def load_or_update_locations_cache(location_counts):
     from geopy.geocoders import Nominatim
     from geopy.extra.rate_limiter import RateLimiter
+    import gspread
+    from datetime import datetime
 
-    cache_path = "G:/My Drive/RunningClub/postcode_cache.csv"
-    if os.path.exists(cache_path):
-        postcode_cache = pd.read_csv(cache_path)
-    else:
-        postcode_cache = pd.DataFrame(columns=["Location", "lat", "lon"])
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(st.secrets["google_sheets"]), scope)
+    client = gspread.authorize(creds)
 
-    known = set(postcode_cache['Location'])
+    sheet = client.open("locations_cache").sheet1
+    existing_data = sheet.get_all_records()
+    locations_cache = pd.DataFrame(existing_data)
+
+    known = set(locations_cache['Location'])
     current = set(location_counts['Location'])
     missing = list(current - known)
 
-    if missing:
-        geolocator = Nominatim(user_agent="runclub-geocoder")
-        geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
-        new_rows = []
-        for loc in missing:
-            try:
-                g = geocode(loc)
-                if g:
-                    new_rows.append({"Location": loc, "lat": g.latitude, "lon": g.longitude})
-            except Exception:
-                continue
-        if new_rows:
-            new_df = pd.DataFrame(new_rows)
-            postcode_cache = pd.concat([postcode_cache, new_df], ignore_index=True)
-            postcode_cache.to_csv(cache_path, index=False)
+    if datetime.today().weekday() == 4:
+        if missing:
+            geolocator = Nominatim(user_agent="runclub-geocoder")
+            geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+            new_rows = []
+            for loc in missing:
+                try:
+                    g = geocode(loc)
+                    if g:
+                        new_rows.append({"Location": loc, "lat": g.latitude, "lon": g.longitude})
+                        sheet.append_row([loc, g.latitude, g.longitude])
+                except Exception:
+                    continue
 
-    return postcode_cache
+            if new_rows:
+                new_df = pd.DataFrame(new_rows)
+                locations_cache = pd.concat([locations_cache, new_df], ignore_index=True)
 
-postcode_cache = load_or_update_postcode_cache(location_counts)
-location_counts = location_counts.merge(postcode_cache, on="Location", how="left")
-location_counts = location_counts.dropna(subset=['lat', 'lon'])
-location_counts['weight'] = location_counts['count'].apply(lambda x: np.log1p(x))
-heat_data = location_counts[['lat', 'lon', 'weight']].values.tolist()
-HeatMap(heat_data).add_to(location_map)
-components.html(location_map._repr_html_(), height=500)
+    return locations_cache  # ✅ This must be indented inside the function!
+
+
 
 st.subheader("🏅 Most Frequent Attenders")
 filtered = exploded['Runner'].value_counts().reset_index()
