@@ -11,6 +11,7 @@ components.html(
 )
 import numpy as np
 import os
+st.write("Files in app directory:", oslistdir())
 import json
 from oauth2client.service_account import ServiceAccountCredentials
 
