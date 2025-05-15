@@ -1,3 +1,7 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*.pyo
 
 # Ignore credentials and secrets
 *.json
@@ -7,6 +11,10 @@
 *.xlsx
 *.xls
 *.csv
+*.bak
 
 # Ignore generated map files
 *.html
+
+#Allow config.toml even though it is in .streamlit/
+!.streamlit/config.toml
