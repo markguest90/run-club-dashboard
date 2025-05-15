@@ -14,6 +14,10 @@ import os
 st.write("Files in app directory:", os.listdir())
 import json
 from oauth2client.service_account import ServiceAccountCredentials
+import gspread
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+from datetime import datetime
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 secrets = st.secrets["google_sheets"]
@@ -316,7 +320,6 @@ Runner Unwrapped for {runner_name}
     except ValueError:
         st.warning("capnumber must be a number")
 
-
 # ------------------------
 # Club Totals + Heatmap + Leaderboard
 # ------------------------
@@ -325,23 +328,17 @@ total_club_km = df.apply(lambda row: len(row['RunnerList']) * row['Distance'], a
 st.subheader("📊 Total Distance Run by the Club")
 st.metric(label="Total Distance", value=f"{round(total_club_km, 1)} km", label_visibility="collapsed")
 
-st.subheader("📍 Run Location Heatmap")
-
 # ------------------------
 # Load or update locations cache via Google Sheet
 # ------------------------
 
 @st.cache_data(show_spinner=False)
 def load_or_update_locations_cache(location_counts):
-    from geopy.geocoders import Nominatim
-    from geopy.extra.rate_limiter import RateLimiter
-    import gspread
-    from datetime import datetime
-
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(st.secrets["google_sheets"]), scope)
     client = gspread.authorize(creds)
 
+    # Open the cache sheet
     sheet = client.open("locations_cache").sheet1
     existing_data = sheet.get_all_records()
     locations_cache = pd.DataFrame(existing_data)
@@ -350,7 +347,7 @@ def load_or_update_locations_cache(location_counts):
     current = set(location_counts['Location'])
     missing = list(current - known)
 
-    if datetime.today().weekday() == 4:
+    if datetime.today().weekday() == 4:  # Only update on Fridays
         if missing:
             geolocator = Nominatim(user_agent="runclub-geocoder")
             geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
@@ -363,14 +360,28 @@ def load_or_update_locations_cache(location_counts):
                         sheet.append_row([loc, g.latitude, g.longitude])
                 except Exception:
                     continue
-
             if new_rows:
                 new_df = pd.DataFrame(new_rows)
                 locations_cache = pd.concat([locations_cache, new_df], ignore_index=True)
 
-    return locations_cache  # ✅ This must be indented inside the function!
+    return locations_cache
 
+# ------------------------
+# Run Location Heatmap Display
+# ------------------------
+st.subheader("📍 Run Location Heatmap")
 
+location_counts = df.groupby('Location').size().reset_index(name='count')
+locations_cache = load_or_update_locations_cache(location_counts)
+location_counts = location_counts.merge(locations_cache, on="Location", how="left")
+location_counts = location_counts.dropna(subset=['lat', 'lon'])
+
+location_counts['weight'] = location_counts['count'].apply(lambda x: np.log1p(x))
+heat_data = location_counts[['lat', 'lon', 'weight']].values.tolist()
+
+location_map = folium.Map(location=[53.38, -3.07], zoom_start=10)
+HeatMap(heat_data).add_to(location_map)
+components.html(location_map._repr_html_(), height=500)
 
 st.subheader("🏅 Most Frequent Attenders")
 filtered = exploded['Runner'].value_counts().reset_index()
