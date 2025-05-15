@@ -126,7 +126,7 @@ st.markdown(
         <h1 style='margin-bottom: 0.5rem;'>Arrowe Park ED Run Club 🏃‍♀️Dashboard🏃‍♂️</h1>
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True)
 
 # ------------------------
 # Mobile Sidebar Tip for Runner Registry
