@@ -29,7 +29,6 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(secrets), scope)
 
 SHEET_NAME = "Arrowe Park ED Run Club"
 
-
 # ------------------------
 # Mobile Mode Toggle
 # ------------------------
@@ -184,8 +183,6 @@ st.markdown("""
   </div>
 </div>
 """, unsafe_allow_html=True)
-
-
 
 
 # ------------------------
