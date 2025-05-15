@@ -369,7 +369,8 @@ def load_or_update_locations_cache(location_counts):
 # ------------------------
 # Run Location Heatmap Display
 # ------------------------
-st.subheader("📍 Run Location Heatmap")
+
+st.subheader("🗺️ Run Location Heatmap")
 
 location_counts = df.groupby('Location').size().reset_index(name='count')
 locations_cache = load_or_update_locations_cache(location_counts)
