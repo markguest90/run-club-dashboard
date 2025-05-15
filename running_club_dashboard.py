@@ -418,7 +418,7 @@ heat_data = location_counts[['lat', 'lon', 'weight']].values.tolist()
 
 location_map = folium.Map(location=[53.38, -3.07], zoom_start=10)
 HeatMap(heat_data).add_to(location_map)
-components.html(location_map._repr_html_(), height=350)
+components.html(location_map._repr_html_(), height=500)
 
 st.subheader("🏅 Most Frequent Attenders")
 filtered = exploded['Runner'].value_counts().reset_index()
