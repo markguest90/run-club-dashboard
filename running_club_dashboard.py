@@ -128,16 +128,28 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 #    """,
 #    unsafe_allow_html=True)
 
+#st.markdown(
+#    """
+#    <h1 style='
+#        text-align: center;
+#        background: linear-gradient(90deg, #4CAF50, #2196F3);
+#        -webkit-background-clip: text;
+#        -webkit-text-fill-color: transparent;
+#        font-weight: bold;
+#    '>
+#        Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️
+#    </h1>
+#    """,
+#    unsafe_allow_html=True)
+
 st.markdown(
     """
     <h1 style='
         text-align: center;
-        background: linear-gradient(90deg, #4CAF50, #2196F3);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: bold;
+        color: #333;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     '>
-        Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️
+        Arrowe Park ED Run Club 🏃‍♀️🏃‍♂️Dashboard🏃‍♀️🏃‍♂️
     </h1>
     """,
     unsafe_allow_html=True
