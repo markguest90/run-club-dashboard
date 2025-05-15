@@ -179,7 +179,7 @@ st.markdown("""
 </style>
 
 <div class="mobile-tip">
-  <div style="padding:10px; background:#e0f7fa; border-radius:5px; text-align:center; font-size: 1.05em;">
+  <div style="padding:10px; background:#EFEAFF; border-radius:5px; text-align:center; font-size: 1.05em;">
     Tap ❯ top left to open the Runner Registry and find your capnumber!
   </div>
 </div>
