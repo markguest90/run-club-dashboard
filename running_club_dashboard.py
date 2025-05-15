@@ -11,7 +11,7 @@ components.html(
 )
 import numpy as np
 import os
-st.write("Files in app directory:", os.listdir())
+#st.write("Files in app directory:", os.listdir())
 import json
 from oauth2client.service_account import ServiceAccountCredentials
 import gspread
