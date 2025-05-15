@@ -1,6 +1,5 @@
 
 # Ignore credentials and secrets
-runclubmapper-3e2cb58c2b12.json
 *.json
 .streamlit/secrets.toml
 
