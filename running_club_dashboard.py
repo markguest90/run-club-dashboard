@@ -137,7 +137,7 @@ st.markdown(
         -webkit-text-fill-color: transparent;
         font-weight: bold;
     '>
-        Arrowe Park ED Run Club 🏃‍♀️🏃‍♂️Dashboard🏃‍♀️🏃‍♂️
+        Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️
     </h1>
     """,
     unsafe_allow_html=True
