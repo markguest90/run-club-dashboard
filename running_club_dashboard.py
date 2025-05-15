@@ -120,13 +120,29 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 #</div>
 #""", unsafe_allow_html=True)
 
+#st.markdown(
+#    """
+#    <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
+#        <h1 style='margin-bottom: 0.5rem;'>Arrowe Park ED Run Club 🏃‍♀️Dashboard🏃‍♂️</h1>
+#    </div>
+#    """,
+#    unsafe_allow_html=True)
+
 st.markdown(
     """
-    <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
-        <h1 style='margin-bottom: 0.5rem;'>Arrowe Park ED Run Club 🏃‍♀️Dashboard🏃‍♂️</h1>
-    </div>
+    <h1 style='
+        text-align: center;
+        background: linear-gradient(90deg, #4CAF50, #2196F3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+    '>
+        Arrowe Park ED Run Club 🏃‍♀️🏃‍♂️Dashboard🏃‍♀️🏃‍♂️
+    </h1>
     """,
-    unsafe_allow_html=True)
+    unsafe_allow_html=True
+)
+
 
 # ------------------------
 # Mobile Sidebar Tip for Runner Registry
