@@ -29,6 +29,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(secrets), scope)
 
 SHEET_NAME = "Arrowe Park ED Run Club"
 
+
 # ------------------------
 # Mobile Mode Toggle
 # ------------------------
@@ -40,43 +41,32 @@ SHEET_NAME = "Arrowe Park ED Run Club"
 # STREAK FUNCTIONS (moved up to support Wrapped)
 # ------------------------
 
-import numpy as np
-
 def longest_streak_by_week(weeks):
-    normalized = sorted(set(int(np.floor(w)) for w in weeks if pd.notnull(w)))
-    if not normalized:
-        return 0
-    streak = max_streak = 1
-    for i in range(1, len(normalized)):
-        if normalized[i] == normalized[i - 1] + 1:
+    weeks = sorted(set(int(w) for w in weeks if pd.notnull(w) and float(w).is_integer()))
+    streak = max_streak = 0
+    prev_week = None
+    for week in weeks:
+        if prev_week is not None and week == prev_week + 1:
             streak += 1
         else:
             streak = 1
         max_streak = max(max_streak, streak)
+        prev_week = week
     return max_streak
 
 def current_streak_by_week(weeks, all_weeks):
-    runner_weeks = sorted(set(int(np.floor(w)) for w in weeks if pd.notnull(w)))
-    all_weeks = sorted(set(int(np.floor(w)) for w in all_weeks if pd.notnull(w)))
-    if not runner_weeks:
+    valid_weeks = sorted(set(int(w) for w in weeks if pd.notnull(w) and float(w).is_integer()))
+    all_weeks = sorted(set(int(w) for w in all_weeks if pd.notnull(w) and float(w).is_integer()))
+    if not valid_weeks:
         return 0
 
-    streak = 1
-    last = runner_weeks[-1]
+    streak = 0
     for week in reversed(all_weeks):
-        if week == last:
-            continue
-        if week in runner_weeks:
-            if last - week == 1:
-                streak += 1
-                last = week
-            else:
-                break
+        if week in valid_weeks:
+            streak += 1
         else:
-            if last - week > 1:
-                break
+            break
     return streak
-
 
 # ------------------------
 # AUTH + LOAD DATA
@@ -123,14 +113,20 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 # ------------------------
 # Dashboard Title - 3 variants
 # ------------------------
+#st.markdown("""
+#<div style='text-align: center;'>
+#    <h1 style='font-size: 2.8em;'>Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️</h1>
+#    <p style='font-size: 1.2em; color: gray;'>Celebrate your achievements, track your streaks, and explore your run club stats!</p>
+#</div>
+#""", unsafe_allow_html=True)
 
-st.markdown(
-    """
-    <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
-        <h1 style='margin-bottom: 0.5rem;'>Arrowe Park ED Run Club 🏃‍♀️Dashboard🏃‍♂️</h1>
-    </div>
-    """,
-    unsafe_allow_html=True)
+#st.markdown(
+#    """
+#    <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
+#        <h1 style='margin-bottom: 0.5rem;'>Arrowe Park ED Run Club 🏃‍♀️Dashboard🏃‍♂️</h1>
+#    </div>
+#    """,
+#    unsafe_allow_html=True)
 
 #st.markdown(
 #    """
@@ -146,18 +142,18 @@ st.markdown(
 #    """,
 #    unsafe_allow_html=True)
 
-#st.markdown(
-#    """
-#    <h1 style='
-#        text-align: center;
-#        color: #333;
-#        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-#    '>
-#        Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️
-#    </h1>
-#    """,
-#    unsafe_allow_html=True
-#)
+st.markdown(
+    """
+    <h1 style='
+        text-align: center;
+        color: #333;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    '>
+        Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️
+    </h1>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # ------------------------
@@ -183,11 +179,13 @@ st.markdown("""
 </style>
 
 <div class="mobile-tip">
-  <div style="padding:10px; background:#EFEAFF; border-radius:5px; text-align:center; font-size: 1.05em;">
-    Tap ❯ top left to open the Runner Registry and find your capnumber!
+  <div style="padding:10px; background:#e0f7fa; border-radius:5px; text-align:center; font-size: 1.05em;">
+    ❯ Tap the arrow in the top left to open the Runner Registry and find your capnumber!
   </div>
 </div>
 """, unsafe_allow_html=True)
+
+
 
 
 # ------------------------
@@ -447,7 +445,6 @@ streak_mode = st.radio("Select", ["Current", "All-time"], horizontal=True, label
 
 streak_data = []
 all_weeks = df['Week'].unique()
-
 for runner in exploded['Runner'].unique():
     weeks = exploded[exploded['Runner'] == runner]['Week']
     if streak_mode == "Current":
@@ -458,7 +455,7 @@ for runner in exploded['Runner'].unique():
     else:
         streak = longest_streak_by_week(weeks)
         label = "Longest Streak"
-        if streak >= 3:
+        if streak >= 2:
             streak_data.append((runner, streak))
 
 streak_df = pd.DataFrame(streak_data, columns=['Runner', label]).sort_values(by=label, ascending=False).reset_index(drop=True)
