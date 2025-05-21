@@ -40,32 +40,49 @@ SHEET_NAME = "Arrowe Park ED Run Club"
 # STREAK FUNCTIONS (moved up to support Wrapped)
 # ------------------------
 
+import numpy as np
+
 def longest_streak_by_week(weeks):
-    weeks = sorted(set(int(w) for w in weeks if pd.notnull(w) and float(w).is_integer()))
-    streak = max_streak = 0
-    prev_week = None
-    for week in weeks:
-        if prev_week is not None and week == prev_week + 1:
+    # Floor all weeks to their integer base (e.g., 44.5 → 44)
+    normalized = sorted(set(int(np.floor(w)) for w in weeks if pd.notnull(w)))
+    if not normalized:
+        return 0
+
+    streak = max_streak = 1
+    for i in range(1, len(normalized)):
+        if normalized[i] == normalized[i - 1] + 1:
             streak += 1
         else:
             streak = 1
         max_streak = max(max_streak, streak)
-        prev_week = week
     return max_streak
 
 def current_streak_by_week(weeks, all_weeks):
-    valid_weeks = sorted(set(int(w) for w in weeks if pd.notnull(w) and float(w).is_integer()))
-    all_weeks = sorted(set(int(w) for w in all_weeks if pd.notnull(w) and float(w).is_integer()))
-    if not valid_weeks:
+    # Floor weeks for both individual runner and total weeks
+    runner_weeks = sorted(set(int(np.floor(w)) for w in weeks if pd.notnull(w)))
+    all_weeks = sorted(set(int(np.floor(w)) for w in all_weeks if pd.notnull(w)))
+
+    if not runner_weeks:
         return 0
 
-    streak = 0
+    streak = 1
+    last = runner_weeks[-1]
+
     for week in reversed(all_weeks):
-        if week in valid_weeks:
-            streak += 1
+        if week == last:
+            continue
+        if week in runner_weeks:
+            if last - week == 1:
+                streak += 1
+                last = week
+            else:
+                break
         else:
-            break
+            if last - week > 1:
+                break
+
     return streak
+
 
 # ------------------------
 # AUTH + LOAD DATA
