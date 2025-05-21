@@ -43,11 +43,9 @@ SHEET_NAME = "Arrowe Park ED Run Club"
 import numpy as np
 
 def longest_streak_by_week(weeks):
-    # Floor all weeks to their integer base (e.g., 44.5 → 44)
     normalized = sorted(set(int(np.floor(w)) for w in weeks if pd.notnull(w)))
     if not normalized:
         return 0
-
     streak = max_streak = 1
     for i in range(1, len(normalized)):
         if normalized[i] == normalized[i - 1] + 1:
@@ -58,16 +56,13 @@ def longest_streak_by_week(weeks):
     return max_streak
 
 def current_streak_by_week(weeks, all_weeks):
-    # Floor weeks for both individual runner and total weeks
     runner_weeks = sorted(set(int(np.floor(w)) for w in weeks if pd.notnull(w)))
     all_weeks = sorted(set(int(np.floor(w)) for w in all_weeks if pd.notnull(w)))
-
     if not runner_weeks:
         return 0
 
     streak = 1
     last = runner_weeks[-1]
-
     for week in reversed(all_weeks):
         if week == last:
             continue
@@ -80,7 +75,6 @@ def current_streak_by_week(weeks, all_weeks):
         else:
             if last - week > 1:
                 break
-
     return streak
 
 
@@ -459,6 +453,7 @@ streak_mode = st.radio("Select", ["Current", "All-time"], horizontal=True, label
 
 streak_data = []
 all_weeks = df['Week'].unique()
+
 for runner in exploded['Runner'].unique():
     weeks = exploded[exploded['Runner'] == runner]['Week']
     if streak_mode == "Current":
@@ -469,7 +464,7 @@ for runner in exploded['Runner'].unique():
     else:
         streak = longest_streak_by_week(weeks)
         label = "Longest Streak"
-        if streak >= 2:
+        if streak >= 3:
             streak_data.append((runner, streak))
 
 streak_df = pd.DataFrame(streak_data, columns=['Runner', label]).sort_values(by=label, ascending=False).reset_index(drop=True)
