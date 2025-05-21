@@ -121,14 +121,8 @@ exploded = df.explode('RunnerList')
 exploded['Runner'] = exploded['RunnerList'].str.strip()
 
 # ------------------------
-# Dashboard Title - 4 variants
+# Dashboard Title - 3 variants
 # ------------------------
-#st.markdown("""
-#<div style='text-align: center;'>
-#    <h1 style='font-size: 2.8em;'>Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️</h1>
-#    <p style='font-size: 1.2em; color: gray;'>Celebrate your achievements, track your streaks, and explore your run club stats!</p>
-#</div>
-#""", unsafe_allow_html=True)
 
 st.markdown(
     """
