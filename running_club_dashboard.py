@@ -29,7 +29,6 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(secrets), scope)
 
 SHEET_NAME = "Arrowe Park ED Run Club"
 
-
 # ------------------------
 # Mobile Mode Toggle
 # ------------------------
@@ -111,7 +110,7 @@ exploded = df.explode('RunnerList')
 exploded['Runner'] = exploded['RunnerList'].str.strip()
 
 # ------------------------
-# Dashboard Title - 3 variants
+# Dashboard Title - 4 variants
 # ------------------------
 #st.markdown("""
 #<div style='text-align: center;'>
@@ -120,13 +119,13 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 #</div>
 #""", unsafe_allow_html=True)
 
-#st.markdown(
-#    """
-#    <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
-#        <h1 style='margin-bottom: 0.5rem;'>Arrowe Park ED Run Club 🏃‍♀️Dashboard🏃‍♂️</h1>
-#    </div>
-#    """,
-#    unsafe_allow_html=True)
+st.markdown(
+    """
+    <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
+        <h1 style='margin-bottom: 0.5rem;'>Arrowe Park ED Run Club 🏃‍♀️Dashboard🏃‍♂️</h1>
+    </div>
+    """,
+    unsafe_allow_html=True)
 
 #st.markdown(
 #    """
@@ -142,18 +141,18 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 #    """,
 #    unsafe_allow_html=True)
 
-st.markdown(
-    """
-    <h1 style='
-        text-align: center;
-        color: #333;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    '>
-        Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️
-    </h1>
-    """,
-    unsafe_allow_html=True
-)
+#st.markdown(
+#    """
+#    <h1 style='
+#        text-align: center;
+#        color: #333;
+#        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+#    '>
+#        Arrowe Park ED Run Club 🏃‍♂️Dashboard🏃‍♀️
+#    </h1>
+#    """,
+#    unsafe_allow_html=True
+#)
 
 
 # ------------------------
@@ -179,13 +178,11 @@ st.markdown("""
 </style>
 
 <div class="mobile-tip">
-  <div style="padding:10px; background:#e0f7fa; border-radius:5px; text-align:center; font-size: 1.05em;">
-    ❯ Tap the arrow in the top left to open the Runner Registry and find your capnumber!
+  <div style="padding:10px; background:#EFEAFF; border-radius:5px; text-align:center; font-size: 1.05em;">
+    Tap ❯ top left to open the Runner Registry and find your capnumber!
   </div>
 </div>
 """, unsafe_allow_html=True)
-
-
 
 
 # ------------------------
