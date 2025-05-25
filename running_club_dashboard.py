@@ -56,27 +56,20 @@ def longest_streak_by_week(weeks):
     return max_streak
 
 def current_streak_by_week(weeks, all_weeks):
-    runner_weeks = sorted(set(int(np.floor(w)) for w in weeks if pd.notnull(w)))
+    runner_weeks = set(int(np.floor(w)) for w in weeks if pd.notnull(w))
     all_weeks = sorted(set(int(np.floor(w)) for w in all_weeks if pd.notnull(w)))
-    if not runner_weeks:
+
+    if not runner_weeks or not all_weeks:
         return 0
 
-    streak = 1
-    last = runner_weeks[-1]
+    streak = 0
     for week in reversed(all_weeks):
-        if week == last:
-            continue
         if week in runner_weeks:
-            if last - week == 1:
-                streak += 1
-                last = week
-            else:
-                break
+            streak += 1
         else:
-            if last - week > 1:
-                break
-    return streak
+            break  # first missed week ends the streak
 
+    return streak
 
 # ------------------------
 # AUTH + LOAD DATA
