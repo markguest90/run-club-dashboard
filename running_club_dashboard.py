@@ -465,7 +465,7 @@ streak_df = pd.DataFrame(streak_data, columns=['Runner', label]).sort_values(by=
 if streak_mode == "Current" and not streak_df.empty:
     top_runner = streak_df.iloc[0]
     if top_runner[label] >= 4:
-        st.toast(f"🔥 {top_runner['Runner']} is on a {top_runner[label]}-week streak!")
+        st.success(f"🔥 {top_runner['Runner']} is on a {top_runner[label]}-week streak!")
 
 if not streak_df.empty:
     st.dataframe(streak_df, hide_index=True, use_container_width=True)
