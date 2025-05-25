@@ -417,8 +417,8 @@ location_counts = location_counts.dropna(subset=['lat', 'lon'])
 location_counts['weight'] = location_counts['count'].apply(lambda x: np.log1p(x))
 heat_data = location_counts[['lat', 'lon', 'weight']].values.tolist()
 
-location_map = folium.Map(location=[53.38, -3.07], zoom_start=10)
-HeatMap(heat_data).add_to(location_map)
+location_map = folium.Map(location=[53.38, -3.07], zoom_start=9.4)
+HeatMap(heat_data, radius=12, blur=8).add_to(location_map)
 components.html(location_map._repr_html_(), height=350)
 
 st.subheader("🏅 Most Frequent Attenders")
