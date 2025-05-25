@@ -417,7 +417,7 @@ location_counts = location_counts.dropna(subset=['lat', 'lon'])
 location_counts['weight'] = location_counts['count'].apply(lambda x: np.log1p(x))
 heat_data = location_counts[['lat', 'lon', 'weight']].values.tolist()
 
-location_map = folium.Map(location=[53.34, -3.05], zoom_start=10.5)
+location_map = folium.Map(location=[53.34, -3.05], zoom_start=10.1)
 HeatMap(heat_data, radius=10, blur=1).add_to(location_map)
 components.html(location_map._repr_html_(), height=350)
 
