@@ -466,3 +466,35 @@ if not streak_df.empty:
 else:
     st.info("No streaks to display.")
 
+def make_sparkline(weeks, weeks_range):
+    attended = set(int(np.floor(w)) for w in weeks if pd.notnull(w))
+    return ''.join(['✅' if w in attended else '❌' for w in weeks_range])
+
+# Get full range of integer weeks and slice last 6
+all_weeks_full = sorted(set(int(np.floor(w)) for w in all_weeks if pd.notnull(w)))
+all_weeks_range = all_weeks_full[-6:] if len(all_weeks_full) >= 6 else all_weeks_full
+
+streak_data = []
+for runner in exploded['Runner'].unique():
+    weeks = exploded[exploded['Runner'] == runner]['Week']
+    spark = make_sparkline(weeks, all_weeks_range)
+
+    if streak_mode == "Current":
+        streak = current_streak_by_week(weeks, all_weeks)
+        label = "Current Streak"
+        if streak >= 2:
+            streak_data.append((runner, streak, spark))
+    else:
+        streak = longest_streak_by_week(weeks)
+        label = "Longest Streak"
+        if streak >= 3:
+            streak_data.append((runner, streak, spark))
+
+# Display streaks + sparkline
+columns = ['Runner', label, 'Last 6 Weeks']
+streak_df = pd.DataFrame(streak_data, columns=columns).sort_values(by=label, ascending=False).reset_index(drop=True)
+if not streak_df.empty:
+    st.dataframe(streak_df, hide_index=True, use_container_width=True)
+else:
+    st.info("No streaks to display.")
+
