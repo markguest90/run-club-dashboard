@@ -384,7 +384,7 @@ def load_or_update_locations_cache(location_counts):
     current = set(location_counts['Location'])
     missing = list(current - known)
 
-    if datetime.today().weekday() == 4:  # Updates on Fridays onlys or change to in [3, 4]:
+    if datetime.today().weekday() in [4,5,6]:  # Updates on Fridays/Sat/Sun onlys or change to in [3, 4]:
         if missing:
             geolocator = Nominatim(user_agent="runclub-geocoder")
             geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
