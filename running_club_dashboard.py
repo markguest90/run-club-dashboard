@@ -391,7 +391,7 @@ st.metric(label="Total Distance", value=f"{round(total_club_km, 1)} km", label_v
 # 🏆 Latest Awards
 # ------------------------
 
-st.subheader("🏆 Latest Awards")
+st.subheader("🏆 Latest Milestones")
 
 # Define milestones and corresponding badge emojis
 milestones = {5: "5️⃣", 10: "🔟", 15: "1️⃣5️⃣", 20: "2️⃣0️⃣", 25: "🥉", 50: "🥈", 100: "🏅"}
@@ -419,7 +419,7 @@ awards_df = awards_df.sort_values("Date", ascending=False).head(3)
 
 if not awards_df.empty:
     for _, row in awards_df.iterrows():
-        st.success(f"{row['Badge']} **{row['Runner']}** reached **{row['Runs']} runs** on **{row['Date'].strftime('%d/%m/%Y')}**")
+        st.success(f"{row['Badge']} **{row['Runner']}** reached **{row['Runs']} runs** on **{row['Date'].strftime('%d/%m/%Y!')}**")
 else:
     st.info("No awards to show yet.")
 
