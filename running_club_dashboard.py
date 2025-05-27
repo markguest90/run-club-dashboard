@@ -236,11 +236,11 @@ st.sidebar.markdown("""
 **🎖️ Badge Key**  
 5️⃣ – 5+ runs  
 🔟 – 10+ runs  
-⚡ - 15+ runs
-🚀 - 20+ runs
+⚡ - 15+ runs  
+🚀 - 20+ runs  
 🥉 – 25+ runs  
 🥈 – 50+ runs  
-🏅 – 100+ runs
+🏅 – 100+ runs  
 """)
 
 
