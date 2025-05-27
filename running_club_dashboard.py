@@ -131,6 +131,12 @@ st.markdown(
     """,
     unsafe_allow_html=True)
 
+col1, col2 = st.columns([0.8, 0.2])
+with col2:
+    if st.button("Refresh Data", help="Click to reload Google Sheet"):
+        st.cache_data.clear()
+        st.experimental_rerun()
+
 #st.markdown(
 #    """
 #    <h1 style='
