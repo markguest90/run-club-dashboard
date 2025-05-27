@@ -123,6 +123,15 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 #</div>
 #""", unsafe_allow_html=True)
 
+# ---------------------
+# Refresh option
+#---------------------
+col1, col2 = st.columns([0.8, 0.2])
+with col2:
+    if st.button("Refresh Data", help="Click to reload Google Sheet"):
+        st.cache_data.clear()
+        st.rerun()
+
 st.markdown(
     """
     <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
@@ -130,12 +139,6 @@ st.markdown(
     </div>
     """,
     unsafe_allow_html=True)
-
-col1, col2 = st.columns([0.8, 0.2])
-with col2:
-    if st.button("Refresh Data", help="Click to reload Google Sheet"):
-        st.cache_data.clear()
-        st.rerun()
 
 #st.markdown(
 #    """
