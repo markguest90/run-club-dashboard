@@ -129,7 +129,7 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 
 
 # Create a 3-column layout and place the button in the rightmost column
-col1, col2, col3 = st.columns([4, 1, 1])
+col1, col2, col3 = st.columns([6, 1, 1])
 with col3:
     if st.button("🔄", help="Click to reload Google Sheet"):
         st.cache_data.clear()
@@ -218,6 +218,10 @@ for name in runners_display['name']:
         badges.append("🥈")
     elif count >= 25:
         badges.append("🥉")
+    elif count >= 20:
+        badges.append("🚀")
+    elif count >= 15:
+        badges.append("⚡")
     elif count >= 10:
         badges.append("🔟")
     elif count >= 5:
@@ -232,6 +236,8 @@ st.sidebar.markdown("""
 **🎖️ Badge Key**  
 5️⃣ – 5+ runs  
 🔟 – 10+ runs  
+⚡ - 15+ runs
+🚀 - 20+ runs
 🥉 – 25+ runs  
 🥈 – 50+ runs  
 🏅 – 100+ runs
@@ -384,7 +390,7 @@ st.metric(label="Total Distance", value=f"{round(total_club_km, 1)} km", label_v
 st.subheader("🏆 Latest Milestones")
 
 # Define milestones and corresponding badge emojis
-milestones = {5: "5️⃣", 10: "🔟", 15: "1️⃣5️⃣", 20: "2️⃣0️⃣", 25: "🥉", 50: "🥈", 100: "🏅"}
+milestones = {5: "5️⃣", 10: "🔟", 15: "⚡", 20: "🚀", 25: "🥉", 50: "🥈", 100: "🏅"}
 
 # Gather all run dates per runner, sorted
 runner_run_dates = exploded[['Runner', 'Date']].dropna().sort_values(['Runner', 'Date'])
