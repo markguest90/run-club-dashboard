@@ -126,12 +126,10 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 # ---------------------
 # Refresh option
 #---------------------
-st.markdown(
-    """
-    <div style=text-align: right;'>
-        <button onclick="location.reload()"style='font-size: 1.5em; border: none; cursor:pointer; '>🔄</button>
-    </div>
-    """, unsafe_allow_html=True)
+col1, col2, col3 = st.columns([4, 1, 1])
+with col3:
+    if st.button("🔄Refresh", help="Refresh data"):
+        st.rerun()
 
 st.markdown(
     """
