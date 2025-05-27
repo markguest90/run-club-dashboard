@@ -135,7 +135,7 @@ with col2:
 st.markdown(
     """
     <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
-        <h1 style='margin-bottom: 0.5rem;'>Run Club🏃‍♀️Dashboard🏃‍♂️</h1>
+        <h1 style='margin-bottom: 0.5rem;'>🏃‍♀️Run Club🏃‍♂️ Dashboard</h1>
     </div>
     """,
     unsafe_allow_html=True)
