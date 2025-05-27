@@ -126,11 +126,12 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 # ---------------------
 # Refresh option
 #---------------------
-col1, col2 = st.columns([0.8, 0.2])
-with col2:
-    if st.button("🔄", help="Click to reload Google Sheet"):
-        st.cache_data.clear()
-        st.rerun()
+st.markdown(
+    """
+    <div style=text-align: right;'>
+        <button onclick="location.reload()"style='font-size: 1.5em; border: none; cursor:pointer; '>🔄</button>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.markdown(
     """
