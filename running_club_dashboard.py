@@ -135,7 +135,7 @@ with col3:
         st.cache_data.clear()
         st.rerun()
 
- st.markdown(
+st.markdown(
     """
     <div style='text-align: center; padding: 1rem; background-color: #f0f8ff; border-radius: 10px;'>
         <h1 style='margin-bottom: 0.5rem;'>Arrowe Park ED Run Club 🏃‍♀️Dashboard🏃‍♂️</h1>
