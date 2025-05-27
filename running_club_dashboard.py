@@ -129,6 +129,7 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 col1, col2, col3 = st.columns([4, 1, 1])
 with col3:
     if st.button("🔄Refresh", help="Refresh data"):
+        st.cache_data.clear()
         st.rerun()
 
 st.markdown(
