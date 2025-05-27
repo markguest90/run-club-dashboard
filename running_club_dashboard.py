@@ -131,7 +131,7 @@ import streamlit as st
 # Create a 3-column layout and place the button in the rightmost column
 col1, col2, col3 = st.columns([10, 1, 1])
 with col3:
-    if st.button("🔄", help="Refresh data"):
+    if st.button("🔄Refresh data", help="Reload Google Sheet"):
         st.cache_data.clear()
         st.rerun()
 
