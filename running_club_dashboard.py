@@ -126,35 +126,14 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 # ---------------------
 # Refresh option
 #---------------------
-# ------------------------
-# Right-Aligned Refresh Button (Universal, no session logic)
-# ------------------------
-st.markdown("""
-    <style>
-        .refresh-button-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: -10px;
-            margin-bottom: 10px;
-        }
-        .refresh-button-container button {
-            background: none;
-            border: none;
-            font-size: 1.6em;
-            cursor: pointer;
-        }
-    </style>
-    <div class="refresh-button-container">
-        <form action="?refresh=1" method="get">
-            <button type="submit">🔄</button>
-        </form>
-    </div>
-""", unsafe_allow_html=True)
+import streamlit as st
 
-# If refresh was clicked, clear cache and rerun
-if st.query_params.get("refresh") == "1":
-    st.cache_data.clear()
-    st.rerun()
+# Create a 3-column layout and place the button in the rightmost column
+col1, col2, col3 = st.columns([10, 1, 1])
+with col3:
+    if st.button("🔄", help="Refresh data"):
+        st.cache_data.clear()
+        st.rerun()
 
 
 
