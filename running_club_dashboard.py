@@ -388,6 +388,42 @@ st.subheader("📊 Total Distance Run by the Club")
 st.metric(label="Total Distance", value=f"{round(total_club_km, 1)} km", label_visibility="collapsed")
 
 # ------------------------
+# 🏆 Latest Awards
+# ------------------------
+
+st.subheader("🏆 Latest Awards")
+
+# Define milestones and corresponding badge emojis
+milestones = {5: "5️⃣", 10: "🔟", 15: "1️⃣5️⃣", 20: "2️⃣0️⃣", 25: "🥉", 50: "🥈", 100: "🏅"}
+
+# Gather all run dates per runner, sorted
+runner_run_dates = exploded[['Runner', 'Date']].dropna().sort_values(['Runner', 'Date'])
+
+# Record when each runner hit each milestone
+milestone_events = []
+
+for runner in runner_run_dates['Runner'].unique():
+    dates = runner_run_dates[runner_run_dates['Runner'] == runner].sort_values('Date')['Date'].reset_index(drop=True)
+    for milestone in milestones:
+        if len(dates) >= milestone:
+            milestone_events.append({
+                "Runner": runner,
+                "Runs": milestone,
+                "Date": dates.iloc[milestone - 1],
+                "Badge": milestones[milestone]
+            })
+
+# Convert and display the last 3 awards
+awards_df = pd.DataFrame(milestone_events)
+awards_df = awards_df.sort_values("Date", ascending=False).head(3)
+
+if not awards_df.empty:
+    for _, row in awards_df.iterrows():
+        st.success(f"{row['Badge']} **{row['Runner']}** reached **{row['Runs']} runs** on **{row['Date'].strftime('%d/%m/%Y')}**")
+else:
+    st.info("No awards to show yet.")
+
+# ------------------------
 # Load or update locations cache via Google Sheet
 # ------------------------
 
