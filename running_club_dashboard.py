@@ -127,15 +127,15 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 # Refresh option
 #---------------------
 # ------------------------
-# Refresh Button (Right Aligned)
+# Right-Aligned Refresh Button (Universal, no session logic)
 # ------------------------
 st.markdown("""
     <style>
         .refresh-button-container {
             display: flex;
             justify-content: flex-end;
-            margin-top: -20px;
-            margin-bottom: -10px;
+            margin-top: -10px;
+            margin-bottom: 10px;
         }
         .refresh-button-container button {
             background: none;
@@ -145,19 +145,17 @@ st.markdown("""
         }
     </style>
     <div class="refresh-button-container">
-        <form action="" method="post">
-            <button name="refresh" type="submit">🔄</button>
+        <form action="?refresh=1" method="get">
+            <button type="submit">🔄</button>
         </form>
     </div>
 """, unsafe_allow_html=True)
 
-# Optional rerun handling (for full refresh logic)
-if "refresh_clicked" not in st.session_state:
-    st.session_state["refresh_clicked"] = False
-if st.experimental_get_query_params().get("refresh"):
-    st.session_state["refresh_clicked"] = True
-if st.session_state["refresh_clicked"]:
+# If refresh was clicked, clear cache and rerun
+if st.query_params.get("refresh") == "1":
+    st.cache_data.clear()
     st.rerun()
+
 
 
 st.markdown(
