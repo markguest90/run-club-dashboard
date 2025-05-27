@@ -128,7 +128,7 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 #---------------------
 col1, col2 = st.columns([0.8, 0.2])
 with col2:
-    if st.button("Refresh Data", help="Click to reload Google Sheet"):
+    if st.button("🔄", help="Click to reload Google Sheet"):
         st.cache_data.clear()
         st.rerun()
 
