@@ -125,25 +125,14 @@ exploded['Runner'] = exploded['RunnerList'].str.strip()
 
 # ---------------------
 # Refresh option
-#---------------------
+# ---------------------
 
-st.markdown("""
-<div style='text-align: right; margin-bottom: 1rem;'>
-    <form action="" method="post">
-        <button style='font-size: 1.5em; background: none; border: none; cursor: pointer;' title='Refresh data'>🔄</button>
-    </form>
-</div>
-""", unsafe_allow_html=True)
 
-# Trigger actual cache clear + rerun
-if st.session_state.get("refresh_triggered"):
-    st.cache_data.clear()
-    st.session_state["refresh_triggered"] = False
-    st.rerun()
-
-# Workaround to detect form submission
-if st.experimental_get_query_params().get("refresh", [None])[0] == "1":
-    st.session_state["refresh_triggered"] = True
+# Create a 3-column layout and place the button in the rightmost column
+col1, col2, col3 = st.columns([4, 1, 1])
+with col3:
+    if st.button("🔄", help="Refresh data"):
+        st.rerun()
 
 st.markdown(
     """
