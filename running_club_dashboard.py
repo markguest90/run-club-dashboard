@@ -185,10 +185,6 @@ st.markdown(
 # ------------------------
 st.markdown("""
 <style>
-@media (min-width: 800px) {
-  .mobile-tip { display: none; }
-}
-
 @keyframes pulseFade {
   0% { opacity: 0; transform: scale(0.95); }
   10% { opacity: 1; transform: scale(1); }
@@ -204,7 +200,7 @@ st.markdown("""
 
 <div class="mobile-tip">
   <div style="padding:10px; background:#EFEAFF; border-radius:5px; text-align:center; font-size: 1.05em;">
-    Tap ❯ top left to open the Runner Registry and find your capnumber!
+    Tap ❯❯ top left to open the Runner Registry and find your capnumber!
   </div>
 </div>
 """, unsafe_allow_html=True)
