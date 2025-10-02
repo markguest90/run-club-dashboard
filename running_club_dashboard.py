@@ -382,12 +382,7 @@ Runner Unwrapped for {runner_name}
 
 # --- 👶 Run Club Baby Count ---
 
-# Handle Google Sheets stripping '#' from headers
-week_col = "Week #"
-if "Week #" not in df.columns and "Week" in df.columns:
-    week_col = "Week"
-
-expected_cols = [week_col, "Run Club Baby Count"]
+expected_cols = ["Week", "Run Club Baby Count"]
 missing = [c for c in expected_cols if c not in df.columns]
 
 if missing:
@@ -401,17 +396,14 @@ else:
     if baby_df.empty:
         st.info("No baby announcements yet — watch this space! 🍼✨")
     else:
-        baby_df = baby_df.sort_values(week_col, ascending=False)
+        baby_df = baby_df.sort_values("Week", ascending=False)
 
         # Headline tally
         total_babies = len(baby_df)
         baby_word = "Baby" if total_babies == 1 else "Babies"
         st.markdown(f"**Total Run Club {baby_word} so far: {total_babies} 👶**")
 
-        # Load Runners tab
-        runners_df = pd.DataFrame(gc.open(SHEET_NAME).worksheet("Runners").get_all_records())
-
-        # Pastel card styling (inject once)
+        # Pastel card styling
         st.markdown(
             """
             <style>
@@ -429,9 +421,9 @@ else:
         import re
         for _, row in baby_df.iterrows():
             entry = str(row["Run Club Baby Count"])
-            week = int(row[week_col])
+            week = int(row["Week"])
 
-            # Extract parent capnumbers inside (capX+capY)
+            # Extract parent capnumbers like (cap1+cap12)
             caps = re.findall(r"cap\\d+", entry)
             parents = []
             for cap in caps:
@@ -461,7 +453,7 @@ else:
                     unsafe_allow_html=True
                 )
 
-    # Divider so it doesn’t run into next section
+    # Divider
     st.markdown("---")
 
 
