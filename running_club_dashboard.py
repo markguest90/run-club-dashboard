@@ -392,6 +392,8 @@ else:
     st.subheader("👶 Run Club Baby Count!")
 
     baby_df = df[expected_cols].dropna()
+    # ✅ remove empty strings as well as NaN
+    baby_df = baby_df[baby_df["Run Club Baby Count"].str.strip() != ""]
 
     if baby_df.empty:
         st.info("No baby announcements yet — watch this space! 🍼✨")
@@ -453,8 +455,8 @@ else:
                     unsafe_allow_html=True
                 )
 
-    # Divider
     st.markdown("---")
+
 
 
 # ------------------------
