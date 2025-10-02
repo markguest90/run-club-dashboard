@@ -408,8 +408,8 @@ else:
         baby_word = "Baby" if total_babies == 1 else "Babies"
         st.markdown(f"**Total Run Club {baby_word} so far: {total_babies} 👶**")
 
-        # Load runners sheet
-        runners_df = pd.DataFrame(sh.worksheet("Runners").get_all_records())
+        # Load Runners tab
+        runners_df = pd.DataFrame(gc.open(SHEET_NAME).worksheet("Runners").get_all_records())
 
         # Pastel card styling (inject once)
         st.markdown(
@@ -460,6 +460,9 @@ else:
                     f"<b>Week {week}</b>! 🎉</div>",
                     unsafe_allow_html=True
                 )
+
+    # Divider so it doesn’t run into next section
+    st.markdown("---")
 
 
 # ------------------------
