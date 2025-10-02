@@ -402,7 +402,7 @@ else:
 
         # Headline tally
         total_babies = len(baby_df)
-        baby_word = "Baby" if total_babies == 1 else "Babies"
+        baby_word = "Babies" if total_babies == 1 else "Babies"
         st.markdown(f"**Total Run Club {baby_word} so far: {total_babies} 👶**")
 
         # Pastel card styling
