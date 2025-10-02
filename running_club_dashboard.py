@@ -381,7 +381,13 @@ Runner Unwrapped for {runner_name}
         st.warning("capnumber must be a number")
 
 # --- 👶 Run Club Baby Count ---
-expected_cols = ["Week #", "Run Club Baby Count"]
+
+# Handle Google Sheets stripping '#' from headers
+week_col = "Week #"
+if "Week #" not in df.columns and "Week" in df.columns:
+    week_col = "Week"
+
+expected_cols = [week_col, "Run Club Baby Count"]
 missing = [c for c in expected_cols if c not in df.columns]
 
 if missing:
@@ -390,14 +396,12 @@ if missing:
 else:
     st.subheader("👶 Run Club Baby Count!")
 
-    # Get only week + baby columns, drop blanks
     baby_df = df[expected_cols].dropna()
 
     if baby_df.empty:
         st.info("No baby announcements yet — watch this space! 🍼✨")
     else:
-        # Sort newest week first
-        baby_df = baby_df.sort_values("Week #", ascending=False)
+        baby_df = baby_df.sort_values(week_col, ascending=False)
 
         # Headline tally
         total_babies = len(baby_df)
@@ -425,7 +429,7 @@ else:
         import re
         for _, row in baby_df.iterrows():
             entry = str(row["Run Club Baby Count"])
-            week = int(row["Week #"])
+            week = int(row[week_col])
 
             # Extract parent capnumbers inside (capX+capY)
             caps = re.findall(r"cap\\d+", entry)
@@ -456,7 +460,6 @@ else:
                     f"<b>Week {week}</b>! 🎉</div>",
                     unsafe_allow_html=True
                 )
-
 
 
 # ------------------------
