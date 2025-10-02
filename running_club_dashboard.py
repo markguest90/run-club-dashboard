@@ -380,6 +380,9 @@ Runner Unwrapped for {runner_name}
     except ValueError:
         st.warning("capnumber must be a number")
 
+sh = gc.open("Arrowe Park ED Club")
+
+
 # --- 👶 Run Club Baby Count ---
 
 # Handle Google Sheets stripping '#' from headers
