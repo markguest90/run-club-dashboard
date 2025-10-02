@@ -443,7 +443,7 @@ for _, row in baby_df.iterrows():
         cap_num = re.sub(r"\D", "", cap)   # keep only digits
         name = cap_to_name.get(cap_num)
         if name:
-            parents.append(f"**{name}**")
+            parents.append(f"<b>{name}<b>")
 
     # Baby name = text before '('
     baby_name = entry.split("(")[0].strip()
