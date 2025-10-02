@@ -114,6 +114,16 @@ df, runners_df = load_sheets()
 exploded = df.explode('RunnerList')
 exploded['Runner'] = exploded['RunnerList'].str.strip()
 
+# Connect to Google Sheet
+sh = gc.open("Arrowe Park ED Club")
+
+# Load Run Club Meets
+df = pd.DataFrame(sh.worksheet("Run Club Meets").get_all_records())
+
+# Load Runners
+runners_df = pd.DataFrame(sh.worksheet("Runners").get_all_records())
+
+
 # ------------------------
 # Dashboard Title - 4 variants
 # ------------------------
