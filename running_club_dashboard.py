@@ -381,13 +381,22 @@ Runner Unwrapped for {runner_name}
         st.warning("capnumber must be a number")
 
 # --- 👶 Run Club Baby Count ---
-if "Run Club Baby Count" in df.columns and "Week #" in df.columns:
+expected_cols = ["Week #", "Run Club Baby Count"]
+missing = [c for c in expected_cols if c not in df.columns]
+
+if missing:
+    st.error(f"Missing expected columns: {missing}. Found: {list(df.columns)}")
+
+else:
     st.subheader("👶 Run Club Baby Count!")
 
-    baby_df = df[["Week #", "Run Club Baby Count"]].dropna()
+    # Get only week + baby columns, drop blanks
+    baby_df = df[expected_cols].dropna()
 
-    if not baby_df.empty:
-        # Sort by most recent week first
+    if baby_df.empty:
+        st.info("No baby announcements yet — watch this space! 🍼✨")
+    else:
+        # Sort newest week first
         baby_df = baby_df.sort_values("Week #", ascending=False)
 
         # Headline tally
@@ -398,12 +407,12 @@ if "Run Club Baby Count" in df.columns and "Week #" in df.columns:
         # Load runners sheet
         runners_df = pd.DataFrame(sh.worksheet("Runners").get_all_records())
 
-        # Pastel card styling (injected once)
+        # Pastel card styling (inject once)
         st.markdown(
             """
             <style>
                 .baby-box {
-                    background-color: #fdf6f0; /* soft pastel peach */
+                    background-color: #fdf6f0; /* pastel peach */
                     padding: 12px;
                     border-radius: 10px;
                     margin-bottom: 8px;
@@ -418,7 +427,7 @@ if "Run Club Baby Count" in df.columns and "Week #" in df.columns:
             entry = str(row["Run Club Baby Count"])
             week = int(row["Week #"])
 
-            # Extract capnumbers in format cap12+cap34
+            # Extract parent capnumbers inside (capX+capY)
             caps = re.findall(r"cap\\d+", entry)
             parents = []
             for cap in caps:
@@ -426,7 +435,7 @@ if "Run Club Baby Count" in df.columns and "Week #" in df.columns:
                 if not match.empty:
                     parents.append(f"**{match.iloc[0]['name']}**")
 
-            # Baby name = text before '(' if present
+            # Baby name = text before '('
             baby_name = entry.split("(")[0].strip()
 
             if len(parents) == 2:
@@ -447,8 +456,7 @@ if "Run Club Baby Count" in df.columns and "Week #" in df.columns:
                     f"<b>Week {week}</b>! 🎉</div>",
                     unsafe_allow_html=True
                 )
-    else:
-        st.info("No baby announcements yet — watch this space! 🍼✨")
+
 
 
 # ------------------------
