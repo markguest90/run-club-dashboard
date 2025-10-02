@@ -405,57 +405,68 @@ else:
         baby_word = "Babies" if total_babies == 1 else "Babies"
         st.markdown(f"**Total Run Club {baby_word} so far: {total_babies} 👶**")
 
-        # Pastel card styling
+# Pastel card styling
+st.markdown(
+    """
+    <style>
+        .baby-box {
+            background-color: #fdf6f0; /* pastel peach */
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# ---- parent lookups (robust) ----
+# normalise capnumber in runners to digits-as-string (handles ints/floats/strings)
+runners_norm = runners_df.copy()
+runners_norm["capnumber"] = (
+    runners_norm["capnumber"]
+    .astype(str)
+    .str.extract(r"(\d+)", expand=False)
+)
+cap_to_name = dict(zip(runners_norm["capnumber"], runners_norm["name"]))
+
+import re
+for _, row in baby_df.iterrows():
+    entry = str(row["Run Club Baby Count"])
+    week = int(row["Week"])
+
+    # find cap refs like cap1+cap12 (case-insensitive)  ✅ correct regex
+    caps = re.findall(r"cap\d+", entry.lower())
+
+    parents = []
+    for cap in caps:
+        cap_num = re.sub(r"\D", "", cap)   # keep only digits
+        name = cap_to_name.get(cap_num)
+        if name:
+            parents.append(f"**{name}**")
+
+    # Baby name = text before '('
+    baby_name = entry.split("(")[0].strip()
+
+    if len(parents) == 2:
         st.markdown(
-            """
-            <style>
-                .baby-box {
-                    background-color: #fdf6f0; /* pastel peach */
-                    padding: 12px;
-                    border-radius: 10px;
-                    margin-bottom: 8px;
-                }
-            </style>
-            """,
+            f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+            f"<b>Week {week}</b>, congratulations to {parents[0]} & {parents[1]}! 🎉</div>",
+            unsafe_allow_html=True
+        )
+    elif len(parents) == 1:
+        st.markdown(
+            f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+            f"<b>Week {week}</b>, congratulations to {parents[0]}! 🎉</div>",
+            unsafe_allow_html=True
+        )
+    else:
+        st.markdown(
+            f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+            f"<b>Week {week}</b>! 🎉</div>",
             unsafe_allow_html=True
         )
 
-        import re
-        for _, row in baby_df.iterrows():
-            entry = str(row["Run Club Baby Count"])
-            week = int(row["Week"])
-
-            # Extract parent capnumbers like (cap1+cap12)
-            caps = re.findall(r"cap\\d+", entry)
-            parents = []
-            for cap in caps:
-                match = runners_df[runners_df["capnumber"].astype(str) == cap.replace("cap", "")]
-                if not match.empty:
-                    parents.append(f"**{match.iloc[0]['name']}**")
-
-            # Baby name = text before '('
-            baby_name = entry.split("(")[0].strip()
-
-            if len(parents) == 2:
-                st.markdown(
-                    f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
-                    f"<b>Week {week}</b>, congratulations to {parents[0]} & {parents[1]}! 🎉</div>",
-                    unsafe_allow_html=True
-                )
-            elif len(parents) == 1:
-                st.markdown(
-                    f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
-                    f"<b>Week {week}</b>, congratulations to {parents[0]}! 🎉</div>",
-                    unsafe_allow_html=True
-                )
-            else:
-                st.markdown(
-                    f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
-                    f"<b>Week {week}</b>! 🎉</div>",
-                    unsafe_allow_html=True
-                )
-
-    st.markdown("---")
 
 
 
