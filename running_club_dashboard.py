@@ -112,7 +112,7 @@ def load_sheets():
 
 def render_baby_count(df, runners_df, position="top", recent_baby=False):
 
-        import re, pandas as pd, streamlit as st
+    import re, pandas as pd, streamlit as st
 
     if "Week" not in df.columns or "Run Club Baby Count" not in df.columns:
         return
