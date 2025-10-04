@@ -156,10 +156,10 @@ if position == "top":
                 "## 👶 Run Club Baby Count <span class='new-badge'>✨ New arrival!</span>",
                 unsafe_allow_html=True,
             )
-        else:
-            st.subheader("👶 Run Club Baby Count")
     else:
-        st.subheader("👶 Run Club Baby Archives")
+        st.subheader("👶 Run Club Baby Count")
+else:
+    st.subheader("👶 Run Club Baby Archives")
 
     # --- Tally ---
     total_babies = len(baby_df)
