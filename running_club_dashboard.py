@@ -111,91 +111,130 @@ def load_sheets():
     return df_meets, df_runners
 
 def render_baby_count(df, runners_df, position="top", recent_baby=False):
+    """Render the Run Club Baby Count section."""
 
-    import re, pandas as pd, streamlit as st
+    import re
+    import pandas as pd
+    import streamlit as st
 
-    if "Week" not in df.columns or "Run Club Baby Count" not in df.columns:
-        return
-
-    # Clean data
-    df = df[df["Run Club Baby Count"].fillna("").str.strip() != ""].copy()
-    if df.empty:
-        return
-    df["Week"] = pd.to_numeric(df["Week"], errors="coerce")
-
-    # Work out which weeks are recent
-    latest_week = df["Week"].max()
-    cutoff = latest_week - 2
-    df["is_recent"] = df["Week"] >= cutoff
-
-    # Pick rows for this position only
-    if position == "top":
-        # Only show babies from the last 2 weeks
-        display_df = df[df["is_recent"]]
-    elif position == "bottom":
-        # Only show babies older than 2 weeks — never repeat recent ones
-        if df["is_recent"].any():
-            display_df = df.loc[~df["is_recent"]]
-        else:
-            display_df = df
+    # --- Prepare recent vs older babies based on week number ---
+    if "Week" in df.columns:
+        df["Week"] = pd.to_numeric(df["Week"], errors="coerce")
+        latest_week = df["Week"].max()
+        recent_cutoff = 2
+        recent_babies = df[
+            (df["Run Club Baby Count"].fillna("").str.strip() != "")
+            & (df["Week"] >= latest_week - recent_cutoff)
+        ]
+        older_babies = df[
+            (df["Run Club Baby Count"].fillna("").str.strip() != "")
+            & (df["Week"] < latest_week - recent_cutoff)
+        ]
     else:
-        display_df = pd.DataFrame()
+        recent_babies = pd.DataFrame()
+        older_babies = pd.DataFrame()
 
 
-    if display_df.empty:
+    expected_cols = ["Week", "Run Club Baby Count"]
+    if not all(c in df.columns for c in expected_cols):
+        st.error(f"Missing expected columns for Baby Count. Found: {list(df.columns)}")
         return
 
-    # Header
-    if position == "top" and df["is_recent"].any():
-        st.markdown(
-            """
-            <style>.new-badge{color:var(--primary-color);font-weight:600;margin-left:6px;}</style>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "## 👶 Run Club Baby Count <span class='new-badge'>✨ New arrival!</span>",
-            unsafe_allow_html=True,
-        )
-    elif position == "top":
-        st.subheader("👶 Run Club Baby Count")
+    # Keep only rows with a non-empty baby entry
+    baby_df = df[expected_cols].dropna()
+    baby_df = baby_df[baby_df["Run Club Baby Count"].str.strip() != ""]
+    if baby_df.empty:
+        return
+
+    baby_df["Week"] = pd.to_numeric(baby_df["Week"], errors="coerce")
+    baby_df = baby_df.sort_values("Week", ascending=False)
+
+    # --- Split recent vs older babies ---
+    latest_week = baby_df["Week"].max()
+    recent_cutoff = 2
+    recent_babies = baby_df[baby_df["Week"] >= latest_week - recent_cutoff]
+    older_babies = baby_df[baby_df["Week"] < latest_week - recent_cutoff]
+
+    # --- Header (with themed badge if recent) ---
+    if position == "top":
+        if recent_baby:
+            st.markdown(
+                """
+                <style>
+                .new-badge {
+                    color: var(--primary-color);
+                    font-weight: 600;
+                    margin-left: 6px;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+            st.markdown(
+                "## 👶 Run Club Baby Count <span class='new-badge'>✨ New arrival!</span>",
+                unsafe_allow_html=True,
+            )
+        else:
+            st.subheader("👶 Run Club Baby Count")
     else:
         st.subheader("👶 Run Club Baby Archives")
 
-    # Tally
-    total = len(df)
-    st.markdown(f"**Total Run Club {'Baby' if total==1 else 'Babies'} so far: {total} 👶**")
 
+    # --- Tally ---
+    total_babies = len(baby_df)
+    baby_word = "Babies"
+    st.markdown(f"**Total Run Club {baby_word} so far: {total_babies} 👶**")
+
+    # --- Card styling ---
     st.markdown(
-        "<style>.baby-box{background:#fdf6f0;padding:12px;border-radius:10px;margin-bottom:8px;}</style>",
-        unsafe_allow_html=True,
+        """
+        <style>
+            .baby-box {
+                background-color: #fdf6f0;
+                padding: 12px;
+                border-radius: 10px;
+                margin-bottom: 8px;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
     )
 
-    # Lookup parents
+    # --- Build capnumber → name lookup ---
     runners_norm = runners_df.copy()
-    runners_norm["capnumber"] = runners_norm["capnumber"].astype(str).str.extract(r"(\\d+)", expand=False)
+    runners_norm["capnumber"] = runners_norm["capnumber"].astype(str).str.extract(r"(\d+)", expand=False)
     cap_to_name = dict(zip(runners_norm["capnumber"], runners_norm["name"]))
 
-    # Render cards
+    # --- Render cards ---
+    display_df = recent_babies if position == "top" else older_babies
     for _, row in display_df.iterrows():
         entry = str(row["Run Club Baby Count"])
         week = int(row["Week"])
-        caps = re.findall(r"cap\\d+", entry.lower())
-        parents = [f"<b>{cap_to_name.get(re.sub(r'\\D','',c),'')}</b>" for c in caps if cap_to_name.get(re.sub(r'\\D','',c),'')]
+
+        caps = re.findall(r"cap\d+", entry.lower())
+        parents = []
+        for cap in caps:
+            cap_num = re.sub(r"\D", "", cap)
+            name = cap_to_name.get(cap_num)
+            if name:
+                parents.append(f"<b>{name}</b>")
+
         baby_name = entry.split("(")[0].strip()
 
         if len(parents) == 2:
-            msg = f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in <b>Week {week}</b>, congratulations to {parents[0]} & {parents[1]}! 🎉"
+            msg = (f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+                   f"<b>Week {week}</b>, congratulations to {parents[0]} & {parents[1]}! 🎉")
         elif len(parents) == 1:
-            msg = f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in <b>Week {week}</b>, congratulations to {parents[0]}! 🎉"
+            msg = (f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+                   f"<b>Week {week}</b>, congratulations to {parents[0]}! 🎉")
         else:
-            msg = f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in <b>Week {week}</b>! 🎉"
+            msg = (f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+                   f"<b>Week {week}</b>! 🎉")
 
         st.markdown(f"<div class='baby-box'>{msg}</div>", unsafe_allow_html=True)
 
+    # Divider line
     st.markdown("---")
-
-
 
 
 df, runners_df = load_sheets()
@@ -669,8 +708,5 @@ else:
  #   st.dataframe(streak_df, hide_index=True, use_container_width=True)
 #else:
  #   st.info("No streaks to display.")
-
-if recent_baby:
-    render_baby_count(df, runners_df, position="top", recent_baby=True)
 
 render_baby_count(df, runners_df, position="bottom", recent_baby=False)
