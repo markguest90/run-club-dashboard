@@ -214,6 +214,21 @@ df, runners_df = load_sheets()
 exploded = df.explode('RunnerList')
 exploded['Runner'] = exploded['RunnerList'].str.strip()
 
+# --- Check if there's been a new baby in the last 2 weeks ---
+recent_cutoff = 2  # weeks
+if "Run Club Baby Count" in df.columns:
+    non_empty = df["Run Club Baby Count"].fillna("").str.strip() != ""
+    if non_empty.any():
+        numeric_weeks = pd.to_numeric(df["Week"], errors="coerce")
+        latest_baby_week = numeric_weeks[non_empty].max()
+        current_week = numeric_weeks.max()
+        recent_baby = (current_week - latest_baby_week) <= recent_cutoff
+    else:
+        recent_baby = False
+else:
+    recent_baby = False
+
+
 # ------------------------
 # Dashboard Title - 4 variants
 # ------------------------
