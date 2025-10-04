@@ -137,11 +137,10 @@ recent_cutoff = 2
 recent_babies = baby_df[baby_df["Week"] >= latest_week - recent_cutoff]
 older_babies = baby_df[baby_df["Week"] < latest_week - recent_cutoff]
 
-
-    # --- Header (with themed badge if recent) ---
-    if position == "top":
-        if recent_baby:
-            st.markdown(
+# --- Header (with themed badge if recent) ---
+if position == "top":
+    if recent_baby:
+        st.markdown(
                 """
                 <style>
                 .new-badge {
