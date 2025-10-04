@@ -195,7 +195,7 @@ st.markdown("""
 }
 
 .mobile-tip {
-  animation: pulseFade 5s ease-in-out forwards;
+  animation: pulseFade 10s ease-in-out forwards;
 }
 </style>
 
