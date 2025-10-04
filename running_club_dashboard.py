@@ -132,10 +132,10 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
     baby_df = baby_df.sort_values("Week", ascending=False)
 
     # --- Split recent vs older babies ---
-latest_week = baby_df["Week"].max()
-recent_cutoff = 2
-recent_babies = baby_df[baby_df["Week"] >= latest_week - recent_cutoff]
-older_babies = baby_df[baby_df["Week"] < latest_week - recent_cutoff]
+    latest_week = baby_df["Week"].max()
+    recent_cutoff = 2
+    recent_babies = baby_df[baby_df["Week"] >= latest_week - recent_cutoff]
+    older_babies = baby_df[baby_df["Week"] < latest_week - recent_cutoff]
 
 # --- Header (with themed badge if recent) ---
 if position == "top":
