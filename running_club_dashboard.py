@@ -156,7 +156,7 @@ if position == "top":
                 "## 👶 Run Club Baby Count <span class='new-badge'>✨ New arrival!</span>",
                 unsafe_allow_html=True,
             )
-        else:
+    else:
             st.subheader("👶 Run Club Baby Count")
     else:
         st.subheader("👶 Run Club Baby Archives")
