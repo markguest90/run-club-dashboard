@@ -206,7 +206,7 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
     cap_to_name = dict(zip(runners_norm["capnumber"], runners_norm["name"]))
 
     # --- Render cards ---
-    display_df = recent_babies if position == "top" and recent_baby else older_babies
+    display_df = recent_babies if position == "top" else older_babies
     for _, row in display_df.iterrows():
         entry = str(row["Run Club Baby Count"])
         week = int(row["Week"])
