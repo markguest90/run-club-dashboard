@@ -135,6 +135,11 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
         recent_babies = pd.DataFrame()
         older_babies = pd.DataFrame()
 
+        # If we're showing the bottom section, drop any recent babies
+    if position == "bottom":
+        older_babies = older_babies[~older_babies.index.isin(recent_babies.index)]
+
+
 
 
     expected_cols = ["Week", "Run Club Baby Count"]
