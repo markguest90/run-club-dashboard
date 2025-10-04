@@ -310,7 +310,7 @@ st.markdown("""
 }
 
 .mobile-tip {
-  animation: pulseFade 10s ease-in-out forwards;
+  animation: pulseFade 8s ease-in-out forwards;
 }
 </style>
 
@@ -495,6 +495,10 @@ Runner Unwrapped for {runner_name}
     except ValueError:
         st.warning("capnumber must be a number")
 
+if recent_baby:
+    render_baby_count(df, runners_df, position="top", recent_baby=True)
+
+
 # ------------------------
 # Club Totals + Heatmap + Leaderboard
 # ------------------------
@@ -678,3 +682,5 @@ else:
 #else:
  #   st.info("No streaks to display.")
 
+if not recent_baby:
+    render_baby_count(df, runners_df, position="bottom", recent_baby=False)
