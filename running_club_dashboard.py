@@ -120,19 +120,21 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
     # --- Prepare recent vs older babies based on week number ---
     if "Week" in df.columns:
         df["Week"] = pd.to_numeric(df["Week"], errors="coerce")
-        latest_week = df["Week"].max()
-        recent_cutoff = 2
-        recent_babies = df[
-            (df["Run Club Baby Count"].fillna("").str.strip() != "")
-            & (df["Week"] >= latest_week - recent_cutoff)
-        ]
-        older_babies = df[
-            (df["Run Club Baby Count"].fillna("").str.strip() != "")
-            & (df["Week"] < latest_week - recent_cutoff)
-        ]
+        base = df[df["Run Club Baby Count"].fillna("").str.strip() != ""].copy()
+
+        if base.empty:
+            recent_babies = pd.DataFrame()
+            older_babies = pd.DataFrame()
+        else:
+            latest_week = base["Week"].max()
+            recent_cutoff = 2
+            recent_babies = base[base["Week"] >= latest_week - recent_cutoff]
+            # Everything else goes to the archive
+            older_babies = base[~base.index.isin(recent_babies.index)]
     else:
         recent_babies = pd.DataFrame()
         older_babies = pd.DataFrame()
+
 
 
     expected_cols = ["Week", "Run Club Baby Count"]
