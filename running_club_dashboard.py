@@ -713,4 +713,7 @@ else:
 #else:
  #   st.info("No streaks to display.")
 
+if recent_baby:
+    render_baby_count(df, runners_df, position="top", recent_baby=True)
+
 render_baby_count(df, runners_df, position="bottom", recent_baby=False)
