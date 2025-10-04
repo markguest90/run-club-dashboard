@@ -152,7 +152,7 @@ if position == "top":
                 """,
                 unsafe_allow_html=True
             )
-            st.markdown(
+        st.markdown(
                 "## 👶 Run Club Baby Count <span class='new-badge'>✨ New arrival!</span>",
                 unsafe_allow_html=True,
             )
