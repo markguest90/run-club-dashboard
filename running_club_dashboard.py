@@ -217,7 +217,7 @@ for _, row in display_df.iterrows():
 
         st.markdown(f"<div class='baby-box'>{msg}</div>", unsafe_allow_html=True)
 
-st.markdown("---")
+    st.markdown("---")
 
 
 df, runners_df = load_sheets()
