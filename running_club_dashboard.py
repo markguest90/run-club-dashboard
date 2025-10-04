@@ -117,6 +117,24 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
     import pandas as pd
     import streamlit as st
 
+    # --- Prepare recent vs older babies based on week number ---
+    if "Week" in df.columns:
+        df["Week"] = pd.to_numeric(df["Week"], errors="coerce")
+        latest_week = df["Week"].max()
+        recent_cutoff = 2
+        recent_babies = df[
+            (df["Run Club Baby Count"].fillna("").str.strip() != "")
+            & (df["Week"] >= latest_week - recent_cutoff)
+        ]
+        older_babies = df[
+            (df["Run Club Baby Count"].fillna("").str.strip() != "")
+            & (df["Week"] < latest_week - recent_cutoff)
+        ]
+    else:
+        recent_babies = pd.DataFrame()
+        older_babies = pd.DataFrame()
+
+
     expected_cols = ["Week", "Run Club Baby Count"]
     if not all(c in df.columns for c in expected_cols):
         st.error(f"Missing expected columns for Baby Count. Found: {list(df.columns)}")
