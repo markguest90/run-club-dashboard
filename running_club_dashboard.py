@@ -110,6 +110,106 @@ def load_sheets():
 
     return df_meets, df_runners
 
+def render_baby_count(df, runners_df, position="top", recent_baby=False):
+    """Render the Run Club Baby Count section."""
+
+    import re
+    import pandas as pd
+    import streamlit as st
+
+    expected_cols = ["Week", "Run Club Baby Count"]
+    if not all(c in df.columns for c in expected_cols):
+        st.error(f"Missing expected columns for Baby Count. Found: {list(df.columns)}")
+        return
+
+    # Keep only rows with a non-empty baby entry
+    baby_df = df[expected_cols].dropna()
+    baby_df = baby_df[baby_df["Run Club Baby Count"].str.strip() != ""]
+    if baby_df.empty:
+        return
+
+    baby_df["Week"] = pd.to_numeric(baby_df["Week"], errors="coerce")
+    baby_df = baby_df.sort_values("Week", ascending=False)
+
+    # --- Header (with themed badge if recent) ---
+    if position == "top":
+        if recent_baby:
+            st.markdown(
+                """
+                <style>
+                .new-badge {
+                    color: var(--primary-color);
+                    font-weight: 600;
+                    margin-left: 6px;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+            st.markdown(
+                "## 👶 Run Club Baby Count <span class='new-badge'>✨ New arrival!</span>",
+                unsafe_allow_html=True,
+            )
+        else:
+            st.subheader("👶 Run Club Baby Count")
+    else:
+        st.subheader("👶 Run Club Baby Archives")
+
+    # --- Tally ---
+    total_babies = len(baby_df)
+    baby_word = "Baby" if total_babies == 1 else "Babies"
+    st.markdown(f"**Total Run Club {baby_word} so far: {total_babies} 👶**")
+
+    # --- Card styling ---
+    st.markdown(
+        """
+        <style>
+            .baby-box {
+                background-color: #fdf6f0;
+                padding: 12px;
+                border-radius: 10px;
+                margin-bottom: 8px;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # --- Build capnumber → name lookup ---
+    runners_norm = runners_df.copy()
+    runners_norm["capnumber"] = runners_norm["capnumber"].astype(str).str.extract(r"(\d+)", expand=False)
+    cap_to_name = dict(zip(runners_norm["capnumber"], runners_norm["name"]))
+
+    # --- Render cards ---
+    for _, row in baby_df.iterrows():
+        entry = str(row["Run Club Baby Count"])
+        week = int(row["Week"])
+
+        caps = re.findall(r"cap\d+", entry.lower())
+        parents = []
+        for cap in caps:
+            cap_num = re.sub(r"\D", "", cap)
+            name = cap_to_name.get(cap_num)
+            if name:
+                parents.append(f"<b>{name}</b>")
+
+        baby_name = entry.split("(")[0].strip()
+
+        if len(parents) == 2:
+            msg = (f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+                   f"<b>Week {week}</b>, congratulations to {parents[0]} & {parents[1]}! 🎉")
+        elif len(parents) == 1:
+            msg = (f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+                   f"<b>Week {week}</b>, congratulations to {parents[0]}! 🎉")
+        else:
+            msg = (f"🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
+                   f"<b>Week {week}</b>! 🎉")
+
+        st.markdown(f"<div class='baby-box'>{msg}</div>", unsafe_allow_html=True)
+
+    st.markdown("---")
+
+
 df, runners_df = load_sheets()
 exploded = df.explode('RunnerList')
 exploded['Runner'] = exploded['RunnerList'].str.strip()
@@ -379,96 +479,6 @@ Runner Unwrapped for {runner_name}
                  st.warning("capnumber not found")
     except ValueError:
         st.warning("capnumber must be a number")
-
-# --- 👶 Run Club Baby Count ---
-
-expected_cols = ["Week", "Run Club Baby Count"]
-missing = [c for c in expected_cols if c not in df.columns]
-
-if missing:
-    st.error(f"Missing expected columns: {missing}. Found: {list(df.columns)}")
-
-else:
-    st.subheader("👶 Run Club Baby Count!")
-
-    baby_df = df[expected_cols].dropna()
-    # ✅ remove empty strings as well as NaN
-    baby_df = baby_df[baby_df["Run Club Baby Count"].str.strip() != ""]
-
-    if baby_df.empty:
-        st.info("No baby announcements yet — watch this space! 🍼✨")
-    else:
-        baby_df = baby_df.sort_values("Week", ascending=False)
-
-        # Headline tally
-        total_babies = len(baby_df)
-        baby_word = "Babies" if total_babies == 1 else "Babies"
-        st.markdown(f"**Total Run Club {baby_word} so far: {total_babies} 👶**")
-
-# Pastel card styling
-st.markdown(
-    """
-    <style>
-        .baby-box {
-            background-color: #fdf6f0; /* pastel peach */
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# ---- parent lookups (robust) ----
-# normalise capnumber in runners to digits-as-string (handles ints/floats/strings)
-runners_norm = runners_df.copy()
-runners_norm["capnumber"] = (
-    runners_norm["capnumber"]
-    .astype(str)
-    .str.extract(r"(\d+)", expand=False)
-)
-cap_to_name = dict(zip(runners_norm["capnumber"], runners_norm["name"]))
-
-import re
-for _, row in baby_df.iterrows():
-    entry = str(row["Run Club Baby Count"])
-    week = int(row["Week"])
-
-    # find cap refs like cap1+cap12 (case-insensitive)  ✅ correct regex
-    caps = re.findall(r"cap\d+", entry.lower())
-
-    parents = []
-    for cap in caps:
-        cap_num = re.sub(r"\D", "", cap)   # keep only digits
-        name = cap_to_name.get(cap_num)
-        if name:
-            parents.append(f"<b>{name}<b>")
-
-    # Baby name = text before '('
-    baby_name = entry.split("(")[0].strip()
-
-    if len(parents) == 2:
-        st.markdown(
-            f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
-            f"<b>Week {week}</b>, congratulations to {parents[0]} & {parents[1]}! 🎉</div>",
-            unsafe_allow_html=True
-        )
-    elif len(parents) == 1:
-        st.markdown(
-            f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
-            f"<b>Week {week}</b>, congratulations to {parents[0]}! 🎉</div>",
-            unsafe_allow_html=True
-        )
-    else:
-        st.markdown(
-            f"<div class='baby-box'>🎉 👶 <b>{baby_name}</b> joined the Run Club family in "
-            f"<b>Week {week}</b>! 🎉</div>",
-            unsafe_allow_html=True
-        )
-
-
-
 
 # ------------------------
 # Club Totals + Heatmap + Leaderboard
