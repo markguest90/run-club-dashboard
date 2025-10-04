@@ -148,6 +148,15 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
 
     baby_df["Week"] = pd.to_numeric(baby_df["Week"], errors="coerce")
     baby_df = baby_df.sort_values("Week", ascending=False)
+    latest_week = int(baby_df["Week"].max())
+    cutoff = latest_week - 2
+    has_recent = (baby_df["Week"] >= cutoff).any()
+
+    if position == "top":
+        baby_df = baby_df[baby_df["Week"] >= cutoff]
+    elif position == "bottom":
+        # Show only older babies if recent ones exist; else show all
+        baby_df = baby_df[baby_df["Week"] < cutoff] if has_recent else baby_df
 
     # --- Split recent vs older babies ---
     latest_week = baby_df["Week"].max()
