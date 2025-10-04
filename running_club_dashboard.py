@@ -130,12 +130,17 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
 
     # Pick rows for this position only
     if position == "top":
+        # Only show babies from the last 2 weeks
         display_df = df[df["is_recent"]]
-    else:  # bottom / archive
+    elif position == "bottom":
+        # Only show babies older than 2 weeks — never repeat recent ones
         if df["is_recent"].any():
-            display_df = df[~df["is_recent"]]
+            display_df = df.loc[~df["is_recent"]]
         else:
             display_df = df
+    else:
+        display_df = pd.DataFrame()
+
 
     if display_df.empty:
         return
