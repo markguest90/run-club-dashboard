@@ -137,10 +137,10 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
     recent_babies = baby_df[baby_df["Week"] >= latest_week - recent_cutoff]
     older_babies = baby_df[baby_df["Week"] < latest_week - recent_cutoff]
 
-# --- Header (with themed badge if recent) ---
-if position == "top":
-    if recent_baby:
-        st.markdown(
+    # --- Header (with themed badge if recent) ---
+    if position == "top":
+        if recent_baby:
+            st.markdown(
                 """
                 <style>
                 .new-badge {
@@ -152,14 +152,15 @@ if position == "top":
                 """,
                 unsafe_allow_html=True
             )
-        st.markdown(
+            st.markdown(
                 "## 👶 Run Club Baby Count <span class='new-badge'>✨ New arrival!</span>",
                 unsafe_allow_html=True,
             )
+        else:
+            st.subheader("👶 Run Club Baby Count")
     else:
-        st.subheader("👶 Run Club Baby Count")
-else:
-    st.subheader("👶 Run Club Baby Archives")
+        st.subheader("👶 Run Club Baby Archives")
+
 
     # --- Tally ---
     total_babies = len(baby_df)
