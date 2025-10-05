@@ -594,7 +594,7 @@ if "Pints Consumed" in df.columns:
         else 0
     )
 
-    st.markdown("## 🍻 Run Club Pints Consumed")
+    st.markdown("## 🍻 Pints Consumed")
     st.markdown(
         f"**Total so far:** {total_pints:.1f} {'pint' if total_pints==1 else 'pints'} 🍺   "
         f"**Average per week:** {average_pints:.1f} 🍻"
