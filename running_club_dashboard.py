@@ -603,6 +603,24 @@ if "Pints Consumed" in df.columns:
     # Optional fun fact
     st.caption("(*Assuming 0.8 pints per runner on pub weeks — cheers!*)")
 
+    # --- Weekly Pints Chart ---
+    import altair as alt
+    if not pint_weeks.empty:
+        chart_data = pint_weeks[["Week", "Estimated Pints"]].sort_values("Week")
+        chart = (
+            alt.Chart(chart_data)
+            .mark_bar(cornerRadiusTopLeft=4, cornerRadiusTopRight=4)
+            .encode(
+                x=alt.X("Week:O", title="Week"),
+                y=alt.Y("Estimated Pints:Q", title="Pints"),
+                tooltip=["Week", alt.Tooltip("Estimated Pints:Q", format=".1f")],
+                color=alt.value("#f4b942"),  # warm amber-gold 🍺
+            )
+            .properties(height=250)
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
 
 # ------------------------
 # Load or update locations cache via Google Sheet
