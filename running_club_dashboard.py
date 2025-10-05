@@ -385,7 +385,7 @@ for name in runners_display['name']:
         badges.append("")
 
 runners_display['🎖️'] = badges
-st.sidebar.dataframe(runners_display, hide_index=True, use_container_width=True)
+st.sidebar.dataframe(runners_display, hide_index=True, width="stretch")
 
 st.sidebar.markdown("""
 5️⃣ – 5+ runs  
@@ -736,7 +736,7 @@ if streak_mode == "Current" and not streak_df.empty:
         st.success(f"🔥 {top_runner['Runner']} is on a {top_runner[label]}-week streak!")
 
 if not streak_df.empty:
-    st.dataframe(streak_df, hide_index=True, use_container_width=True)
+    st.dataframe(streak_df, hide_index=True, width="stretch")
 else:
     st.info("No streaks to display.")
 
@@ -768,7 +768,7 @@ else:
 #columns = ['Runner', label, 'Last 6 Weeks']
 #streak_df = pd.DataFrame(streak_data, columns=columns).sort_values(by=label, ascending=False).reset_index(drop=True)
 #if not streak_df.empty:
- #   st.dataframe(streak_df, hide_index=True, use_container_width=True)
+ #   st.dataframe(streak_df, hide_index=True, width="stretch")
 #else:
  #   st.info("No streaks to display.")
 
