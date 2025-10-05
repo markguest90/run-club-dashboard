@@ -1,3 +1,18 @@
+# -------------------------------------------------------------
+# NOTE: Streamlit deprecation reminder
+# -------------------------------------------------------------
+# `use_container_width` will be removed after 2025-12-31.
+# When Streamlit Cloud upgrades, run a simple find-and-replace:
+#
+#     st.altair_chart(chart, use_container_width=True)
+#         → st.altair_chart(chart, width="stretch")
+#
+#     st.altair_chart(chart, use_container_width=False)
+#         → st.altair_chart(chart, width="content")
+#
+# No other code changes needed. Behaviour and layout identical.
+# -------------------------------------------------------------
+
 import streamlit as st
 import pandas as pd
 import altair as alt
@@ -22,8 +37,6 @@ from datetime import datetime
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 secrets = st.secrets["google_sheets"]
 creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(secrets), scope)
-
-# trial commit
 
 # ------------------------
 # CONFIG
