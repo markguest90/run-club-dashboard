@@ -23,6 +23,8 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 secrets = st.secrets["google_sheets"]
 creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(secrets), scope)
 
+# trial commit
+
 # ------------------------
 # CONFIG
 # ------------------------
