@@ -485,7 +485,7 @@ if cap_input:
                 tooltip=['Month', 'Runs']
             )
 
-            st.altair_chart(chart, use_container_width=True)
+            st.altair_chart(chart, width="stretch")
 
 
 
@@ -619,7 +619,7 @@ if "Pints Consumed" in df.columns:
             .properties(height=250)
         )
 
-        st.altair_chart(chart, use_container_width=True)
+        st.altair_chart(chart, width="stretch")
 
     # --- Booziest Week ---
     if not pint_weeks.empty:
@@ -699,7 +699,7 @@ chart = alt.Chart(filtered).mark_bar().encode(
     tooltip=['Runner', 'Count']
 ).properties(height=400)
 
-st.altair_chart(chart, use_container_width=True)
+st.altair_chart(chart, width="stretch")
 
 # ------------------------
 # Streaks (All-Time and Current based on Week)
