@@ -1,5 +1,17 @@
 
 import streamlit as st
+
+# --- Temporary compatibility patch until Streamlit Cloud fully supports width= ---
+if "width" not in st.altair_chart.__code__.co_varnames:
+    _orig_altair_chart = st.altair_chart  # keep original reference
+
+    def altair_chart_patch(chart, width=None, **kwargs):
+        # Map width='stretch'/'content' back to use_container_width
+        use_container_width = True if width == "stretch" else False
+        return _orig_altair_chart(chart, use_container_width=use_container_width, **kwargs)
+
+    st.altair_chart = altair_chart_patch
+
 import pandas as pd
 import altair as alt
 import folium
@@ -23,17 +35,6 @@ from datetime import datetime
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 secrets = st.secrets["google_sheets"]
 creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(secrets), scope)
-
-# --- Temporary compatibility patch until Streamlit Cloud fully supports width= ---
-if "width" not in st.altair_chart.__code__.co_varnames:
-    _orig_altair_chart = st.altair_chart  # keep original reference
-
-    def altair_chart_patch(chart, width=None, **kwargs):
-        # Map width='stretch'/'content' back to use_container_width
-        use_container_width = True if width == "stretch" else False
-        return _orig_altair_chart(chart, use_container_width=use_container_width, **kwargs)
-
-    st.altair_chart = altair_chart_patch
 
 # ------------------------
 # CONFIG
