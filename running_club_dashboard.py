@@ -24,16 +24,16 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 secrets = st.secrets["google_sheets"]
 creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(secrets), scope)
 
-import streamlit as st
+# --- Temporary compatibility patch until Streamlit Cloud fully supports width= ---
+if "width" not in st.altair_chart.__code__.co_varnames:
+    _orig_altair_chart = st.altair_chart  # keep original reference
 
-# Temporary compatibility patch until Streamlit Cloud upgrades
-if not hasattr(st, "altair_chart") or "width" not in st.altair_chart.__code__.co_varnames:
     def altair_chart_patch(chart, width=None, **kwargs):
-        # Map width='stretch' / 'content' back to use_container_width
+        # Map width='stretch'/'content' back to use_container_width
         use_container_width = True if width == "stretch" else False
-        return st.altair_chart(chart, use_container_width=use_container_width, **kwargs)
-    st.altair_chart = altair_chart_patch
+        return _orig_altair_chart(chart, use_container_width=use_container_width, **kwargs)
 
+    st.altair_chart = altair_chart_patch
 
 # ------------------------
 # CONFIG
