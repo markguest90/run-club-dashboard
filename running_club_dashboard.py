@@ -1,17 +1,5 @@
 
 import streamlit as st
-
-# --- Temporary compatibility patch until Streamlit Cloud fully supports width= ---
-if "width" not in st.altair_chart.__code__.co_varnames:
-    _orig_altair_chart = st.altair_chart  # keep original reference
-
-    def altair_chart_patch(chart, width=None, **kwargs):
-        # Map width='stretch'/'content' back to use_container_width
-        use_container_width = True if width == "stretch" else False
-        return _orig_altair_chart(chart, use_container_width=use_container_width, **kwargs)
-
-    st.altair_chart = altair_chart_patch
-
 import pandas as pd
 import altair as alt
 import folium
@@ -397,7 +385,7 @@ for name in runners_display['name']:
         badges.append("")
 
 runners_display['🎖️'] = badges
-st.sidebar.dataframe(runners_display, hide_index=True, width="stretch")
+st.sidebar.dataframe(runners_display, hide_index=True, use_container_width=True)
 
 st.sidebar.markdown("""
 5️⃣ – 5+ runs  
@@ -497,7 +485,7 @@ if cap_input:
                 tooltip=['Month', 'Runs']
             )
 
-            st.altair_chart(chart, width="stretch")
+            st.altair_chart(chart, use_container_width=True)
 
 
 
@@ -631,7 +619,7 @@ if "Pints Consumed" in df.columns:
             .properties(height=250)
         )
 
-        st.altair_chart(chart, width="stretch")
+        st.altair_chart(chart, use_container_width=True)
 
     # --- Booziest Week ---
     if not pint_weeks.empty:
@@ -711,7 +699,7 @@ chart = alt.Chart(filtered).mark_bar().encode(
     tooltip=['Runner', 'Count']
 ).properties(height=400)
 
-st.altair_chart(chart, width="stretch")
+st.altair_chart(chart, use_container_width=True)
 
 # ------------------------
 # Streaks (All-Time and Current based on Week)
@@ -748,7 +736,7 @@ if streak_mode == "Current" and not streak_df.empty:
         st.success(f"🔥 {top_runner['Runner']} is on a {top_runner[label]}-week streak!")
 
 if not streak_df.empty:
-    st.dataframe(streak_df, hide_index=True, width="stretch")
+    st.dataframe(streak_df, hide_index=True, use_container_width=True)
 else:
     st.info("No streaks to display.")
 
@@ -780,7 +768,7 @@ else:
 #columns = ['Runner', label, 'Last 6 Weeks']
 #streak_df = pd.DataFrame(streak_data, columns=columns).sort_values(by=label, ascending=False).reset_index(drop=True)
 #if not streak_df.empty:
- #   st.dataframe(streak_df, hide_index=True, width="stretch")
+ #   st.dataframe(streak_df, hide_index=True, use_container_width=True)
 #else:
  #   st.info("No streaks to display.")
 
