@@ -234,7 +234,7 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
         st.markdown(f"<div class='baby-box'>{msg}</div>", unsafe_allow_html=True)
 
     # Divider line
-    st.markdown("---")
+   # st.markdown("---")
 
 
 df, runners_df = load_sheets()
