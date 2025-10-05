@@ -183,7 +183,7 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
     # --- Tally ---
     total_babies = len(baby_df)
     baby_word = "Babies"
-    st.markdown(f"**Total Run Club {baby_word} so far: {total_babies} 👶**")
+    st.markdown(f"**Total Run Club {baby_word}: {total_babies} 👶**")
 
     # --- Card styling ---
     st.markdown(
