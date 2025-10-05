@@ -621,6 +621,17 @@ if "Pints Consumed" in df.columns:
 
         st.altair_chart(chart, use_container_width=True)
 
+    # --- Booziest Week ---
+    if not pint_weeks.empty:
+        max_row = pint_weeks.loc[pint_weeks["Estimated Pints"].idxmax()]
+        max_week = int(max_row["Week"])
+        max_pints = round(max_row["Estimated Pints"], 1)
+
+        st.markdown(
+            f"### 🥂 Booziest Week: **Week {max_week}** – {max_pints:.1f} "
+            f"{'pint' if max_pints == 1 else 'pints'} 🍾"
+        )
+
 
 # ------------------------
 # Load or update locations cache via Google Sheet
