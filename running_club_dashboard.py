@@ -629,7 +629,7 @@ if "Pints Consumed" in df.columns:
 
         st.markdown(
             f"### 🥂 Booziest Week: **Week {max_week}** – {max_pints:.1f} "
-            f"{'pint' if max_pints == 1 else 'pints'} 🍾"
+            f"{'pint' if max_pints == 1 else 'pints'} 🍾🥴"
         )
 
 
