@@ -601,7 +601,7 @@ if "Pints Consumed" in df.columns:
     )
 
     # Optional fun fact
-    st.caption("(*Assuming 0.8 pints per runner on pub weeks — cheers!*)")
+    st.caption("(*Assumes 0.8 pints per runner on pub weeks — cheers!*)")
 
     # --- Weekly Pints Chart ---
     import altair as alt
