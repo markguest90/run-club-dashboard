@@ -108,6 +108,13 @@ def load_sheets():
     df_runners = pd.DataFrame(runners_sheet.get_all_records())
     df_runners['name'] = df_runners['name'].str.strip()
 
+        # Handle optional Pints Consumed column
+    if "Pints Consumed" in df_meets.columns:
+        df_meets["Pints Consumed"] = df_meets["Pints Consumed"].str.strip().str.upper()
+    else:
+        df_meets["Pints Consumed"] = ""
+
+    
     return df_meets, df_runners
 
 def render_baby_count(df, runners_df, position="top", recent_baby=False):
