@@ -619,7 +619,7 @@ if "Pints Consumed" in df.columns:
             .properties(height=250)
         )
 
-        st.altair_chart(chart, width="stretch")
+        st.altair_chart(chart, use_container_width=True)
 
     # --- Booziest Week ---
     if not pint_weeks.empty:
