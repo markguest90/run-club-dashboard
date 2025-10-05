@@ -577,6 +577,33 @@ if not awards_df.empty:
 else:
     st.info("No awards to show yet.")
 
+# --- 🍺 Run Club Pints Consumed ---
+if "Pints Consumed" in df.columns:
+    # Identify weeks with a Y
+    pint_weeks = df[df["Pints Consumed"].str.upper() == "Y"].copy()
+
+    # Each Y week earns 0.8 × number of runners
+    pint_weeks["Estimated Pints"] = pint_weeks["Runners"].apply(
+        lambda r: 0.8 * len([x for x in str(r).split(",") if x.strip()])
+    )
+
+    total_pints = pint_weeks["Estimated Pints"].sum().round(1)
+    average_pints = (
+        total_pints / len(df[df["Pints Consumed"].str.strip() != ""])
+        if len(df[df["Pints Consumed"].str.strip() != ""]) > 0
+        else 0
+    )
+
+    st.markdown("## 🍻 Run Club Pints Consumed")
+    st.markdown(
+        f"**Total so far:** {total_pints:.1f} {'pint' if total_pints==1 else 'pints'} 🍺   "
+        f"**Average per week:** {average_pints:.1f} 🍻"
+    )
+
+    # Optional fun fact
+    st.caption("(*Assuming 0.8 pints per runner on pub weeks — cheers!*)")
+
+
 # ------------------------
 # Load or update locations cache via Google Sheet
 # ------------------------
