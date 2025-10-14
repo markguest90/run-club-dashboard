@@ -229,7 +229,7 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
     # --- Render cards ---
     display_df = recent_babies if position == "top" else older_babies
     for _, row in display_df.iterrows():
-        entry = str(row["Run Club Baby"])
+        entry = str(row["Run Club Baby Count"])
         week = int(row["Week"])
 
         caps = re.findall(r"cap\d+", entry.lower())
