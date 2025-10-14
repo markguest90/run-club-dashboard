@@ -144,11 +144,11 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
         latest_week = df["Week"].max()
         recent_cutoff = 2
         recent_babies = df[
-            (df["Run Club Baby Count"].fillna("").str.strip() != "")
+            (df["Run Club Baby"].fillna("").str.strip() != "")
             & (df["Week"] >= latest_week - recent_cutoff)
         ]
         older_babies = df[
-            (df["Run Club Baby Count"].fillna("").str.strip() != "")
+            (df["Run Club Baby"].fillna("").str.strip() != "")
             & (df["Week"] < latest_week - recent_cutoff)
         ]
     else:
@@ -163,7 +163,7 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
 
     # Keep only rows with a non-empty baby entry
     baby_df = df[expected_cols].dropna()
-    baby_df = baby_df[baby_df["Run Club Baby Count"].str.strip() != ""]
+    baby_df = baby_df[baby_df["Run Club Baby"].str.strip() != ""]
     if baby_df.empty:
         return
 
@@ -192,11 +192,11 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
                 unsafe_allow_html=True
             )
             st.markdown(
-                "## 👶 Run Club Baby Count <span class='new-badge'>✨ New arrival!</span>",
+                "## 👶 Run Club Baby <span class='new-badge'>✨ New arrival!</span>",
                 unsafe_allow_html=True,
             )
         else:
-            st.subheader("👶 Run Club Baby Count")
+            st.subheader("👶 Run Club Baby")
     else:
         st.subheader("👶 Run Club Baby Archives")
 
@@ -229,7 +229,7 @@ def render_baby_count(df, runners_df, position="top", recent_baby=False):
     # --- Render cards ---
     display_df = recent_babies if position == "top" else older_babies
     for _, row in display_df.iterrows():
-        entry = str(row["Run Club Baby Count"])
+        entry = str(row["Run Club Baby"])
         week = int(row["Week"])
 
         caps = re.findall(r"cap\d+", entry.lower())
