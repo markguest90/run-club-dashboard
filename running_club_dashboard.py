@@ -722,8 +722,8 @@ if "Injuries" in df.columns:
 
     if not injuries_df.empty:
         # Emoji header 🩹🦴🤕
-        st.markdown("## 🤕🦴 Injuries")
-        st.markdown(f"**Total mishaps recorded:** {len(injuries_df)} 🩹")
+        st.markdown("## 🤕 Injuries")
+        st.markdown(f"**Total mishaps recorded:** {len(injuries_df)} 🦴")
 
         # Themed card styling (Run Club teal/emerald)
         st.markdown(
