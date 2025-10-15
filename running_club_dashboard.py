@@ -722,7 +722,7 @@ if "Injuries" in df.columns:
 
     if not injuries_df.empty:
         # Emoji header 🩹🦴🤕
-        st.markdown("## Injuries of Run Club 🤕🦴")
+        st.markdown("##🤕🦴Injuries")
         st.markdown(f"**Total mishaps recorded:** {len(injuries_df)} 🩹")
 
         # Themed card styling (Run Club teal/emerald)
@@ -744,7 +744,7 @@ if "Injuries" in df.columns:
             unsafe_allow_html=True,
         )
 
-        for i, row in enumerate(injuries_df.sort_values("Week", ascending=False).itertuples()):
+        for i, row in enumerate(injuries_df.sort_values("Week", ascending=True).itertuples()):
             st.markdown(
                 f"<div class='injury-card'><b>Week {int(row.Week)}</b> – {row.Injuries.strip()}</div>",
                 unsafe_allow_html=True,
