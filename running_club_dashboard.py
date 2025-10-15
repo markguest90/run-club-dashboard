@@ -715,6 +715,42 @@ chart = alt.Chart(filtered).mark_bar().encode(
 
 st.altair_chart(chart, use_container_width=True)
 
+# --- 🩹 Injuries of Run Club ---
+if "Injuries" in df.columns:
+    injuries_df = df[df["Injuries"].astype(str).str.strip().str.lower().ne("none")]
+    injuries_df = injuries_df[injuries_df["Injuries"].astype(str).str.strip() != ""].copy()
+
+    if not injuries_df.empty:
+        # Emoji header 🩹🦴🤕
+        st.markdown("## 🩹 Injuries of Run Club 🤕🦴")
+        st.markdown(f"**Total mishaps recorded:** {len(injuries_df)} 🩹")
+
+        # Themed card styling (Run Club teal/emerald)
+        st.markdown(
+            """
+            <style>
+            .injury-card {
+                background-color: #f6fffd; /* subtle mint */
+                border-radius: 10px;
+                padding: 10px 14px;
+                margin-bottom: 8px;
+                border-left: 5px solid #009688; /* Run Club teal-emerald accent */
+            }
+            .injury-card:nth-child(even) {
+                background-color: #e9fffa;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        for i, row in enumerate(injuries_df.sort_values("Week", ascending=False).itertuples()):
+            st.markdown(
+                f"<div class='injury-card'><b>Week {int(row.Week)}</b> – {row.Injuries.strip()}</div>",
+                unsafe_allow_html=True,
+            )
+
+
 # ------------------------
 # Streaks (All-Time and Current based on Week)
 # ------------------------
