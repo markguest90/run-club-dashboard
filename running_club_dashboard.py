@@ -802,14 +802,13 @@ if "Injuries" in df.columns:
             """
             <style>
             .injury-card {
-                background-color: #f6fffd; /* subtle mint */
+                background-color: #f7fffb;  /* light mint */
                 border-radius: 10px;
                 padding: 10px 14px;
                 margin-bottom: 8px;
-                border-left: 5px solid #009688; /* Run Club teal-emerald accent */
             }
             .injury-card:nth-child(even) {
-                background-color: #e9fffa;
+                background-color: #edfff8;  /* slightly deeper mint for contrast */
             }
             </style>
             """,
@@ -821,5 +820,6 @@ if "Injuries" in df.columns:
                 f"<div class='injury-card'><b>Week {int(row.Week)}</b> – {row.Injuries.strip()}</div>",
                 unsafe_allow_html=True,
             )
+
 
 render_baby_count(df, runners_df, position="bottom", recent_baby=False)
