@@ -798,28 +798,37 @@ if "Injuries" in df.columns:
         st.markdown(f"**Total mishaps recorded:** {len(injuries_df)} 🤕")
 
         # Themed card styling (Run Club teal/emerald)
+                # Pastel alternating card styling (works correctly across cards)
         st.markdown(
             """
             <style>
+            .injuries-container {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
             .injury-card {
                 background-color: #f7fffb;  /* light mint */
                 border-radius: 10px;
                 padding: 10px 14px;
-                margin-bottom: 8px;
+                transition: background-color 0.3s ease;
             }
             .injury-card:nth-child(even) {
-                background-color: #edfff8;  /* slightly deeper mint for contrast */
+                background-color: #edfff8;  /* slightly deeper mint */
             }
             </style>
             """,
             unsafe_allow_html=True,
         )
 
+        cards_html = ["<div class='injuries-container'>"]
         for i, row in enumerate(injuries_df.sort_values("Week", ascending=True).itertuples()):
-            st.markdown(
-                f"<div class='injury-card'><b>Week {int(row.Week)}</b> – {row.Injuries.strip()}</div>",
-                unsafe_allow_html=True,
+            cards_html.append(
+                f"<div class='injury-card'><b>Week {int(row.Week)}</b> – {row.Injuries.strip()}</div>"
             )
+        cards_html.append("</div>")
+        st.markdown("\n".join(cards_html), unsafe_allow_html=True)
+
 
 
 render_baby_count(df, runners_df, position="bottom", recent_baby=False)
