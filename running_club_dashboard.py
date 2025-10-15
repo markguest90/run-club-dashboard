@@ -808,18 +808,19 @@ if "Injuries" in df.columns:
                 gap: 8px;
             }
             .injury-card {
-                background-color: #f7fffb;  /* light mint */
+                background-color: #edfff8;  /* slightly deeper mint first */
                 border-radius: 10px;
                 padding: 10px 14px;
                 transition: background-color 0.3s ease;
             }
             .injury-card:nth-child(even) {
-                background-color: #edfff8;  /* slightly deeper mint */
+                background-color: #f7fffb;  /* lighter mint second */
             }
             </style>
             """,
             unsafe_allow_html=True,
         )
+
 
         cards_html = ["<div class='injuries-container'>"]
         for i, row in enumerate(injuries_df.sort_values("Week", ascending=True).itertuples()):
