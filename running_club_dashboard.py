@@ -177,7 +177,7 @@ def render_baby_count(df, runners_df, position="bottom", recent_baby=False):
     older_babies = baby_df[baby_df["Week"] < latest_week - recent_cutoff]
 
     # --- Header (with themed badge if recent) ---
-    if position == "top":
+    if position == "bottom ":
         if recent_baby:
             st.markdown(
                 """
