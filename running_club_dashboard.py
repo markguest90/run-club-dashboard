@@ -131,7 +131,7 @@ def load_sheets():
     
     return df_meets, df_runners
 
-def render_baby_count(df, runners_df, position="top", recent_baby=recent_baby):
+def render_baby_count(df, runners_df, position="top", recent_baby=True):
     """Render the Run Club Baby Count section."""
 
     import re
