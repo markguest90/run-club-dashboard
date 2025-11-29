@@ -832,4 +832,4 @@ if "Injuries" in df.columns:
 
 
 
-render_baby_count(df, runners_df, position="bottom", recent_baby=False)
+render_baby_count(df, runners_df, position="bottom", recent_baby=recent_baby)
