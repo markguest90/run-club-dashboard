@@ -508,7 +508,7 @@ Runner Unwrapped for {runner_name}
         st.warning("capnumber must be a number")
 
 if recent_baby:
-    render_baby_count(df, runners_df, position="top", recent_baby=True)
+    render_baby_count(df, runners_df, "top", True)
 
 
 # ------------------------
@@ -796,4 +796,4 @@ if "Injuries" in df.columns:
 
 
 
-render_baby_count(df, runners_df, position="bottom", recent_baby=False)
+render_baby_count(df, runners_df, "bottom", recent_baby)
