@@ -131,7 +131,7 @@ def load_sheets():
     
     return df_meets, df_runners
 
-def render_baby_count(df, runners_df, position="bottom", recent_baby=False):
+def render_baby_count(df, runners_df, position="top", recent_baby=recent_baby):
     """Render the Run Club Baby Count section."""
 
     import re
@@ -177,7 +177,7 @@ def render_baby_count(df, runners_df, position="bottom", recent_baby=False):
     older_babies = baby_df[baby_df["Week"] < latest_week - recent_cutoff]
 
     # --- Header (with themed badge if recent) ---
-    if position == "bottom ":
+    if position == "top":
         if recent_baby:
             st.markdown(
                 """
