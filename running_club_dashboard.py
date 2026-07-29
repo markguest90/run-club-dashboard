@@ -307,6 +307,8 @@ st.markdown(
     """,
     unsafe_allow_html=True)
 
+st.markdown('<div style="background:#000;color:white;text-align:center;padding:12px;border-radius:6px;"><div style="font-size:26px;font-weight:bold;">🪦 ⚰️ &nbsp; IN MEMORIAM &nbsp; ⚰️ 🪦</div><div style="font-size:17px;margin-top:3px;">EDRC · 2024–2026</div></div>', unsafe_allow_html=True)
+
 #st.markdown("""
 # <div style='text-align: center; background-color: #f0f8ff; padding: 1em; border-radius: 12px;'>
 #    <h1 style='font-size: 2.5em; letter-spacing: 0.03em; margin-bottom: 0.2em;'>Arrowe Park ED Run Club</h1>
